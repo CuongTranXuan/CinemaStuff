@@ -1,0 +1,44 @@
+{
+  "name": "testcinema",
+  "version": "1.0.0",
+  "description": "test streaming server",
+  "main": "main.js",
+  "scripts": {
+    "test": "nodemon --ignore './dashboard/' --ignore './WebFilm/' main.js"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "dashboard/*"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CuongTranXuan/testCinema.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CuongTranXuan/testCinema/issues"
+  },
+  "homepage": "https://github.com/CuongTranXuan/testCinema#readme",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
+    "child-process": "^1.0.2",
+    "connect-busboy": "0.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.6",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.2",
+    "path": "^0.12.7",
+    "path-to-regexp": "^6.1.0",
+    "rootpath": "^0.1.2"
+  }
+}
