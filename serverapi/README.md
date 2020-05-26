@@ -13,7 +13,7 @@
 
 
 
-# installation nginx
+# install nginx
 1. preinstall nginx
     sudo apt update
     sudo apt install -y build-essential git tree
