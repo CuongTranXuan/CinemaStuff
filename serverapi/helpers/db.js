@@ -4,6 +4,6 @@ mongoose.connect(config.connectionString, { useCreateIndex: true, useNewUrlParse
 mongoose.Promise = global.Promise;
 
 module.exports = {
-    User: require('../user/userModel.js'),
-    Film: require('../film/filmModel.js')
+    User: require('../controllers/user/userModel.js'),
+    Film: require('../controllers/film/filmModel.js')
 };

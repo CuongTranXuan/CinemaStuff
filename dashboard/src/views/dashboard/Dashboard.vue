@@ -80,8 +80,9 @@
     },
     created () {
       var that = this
-      AppServices.getFilmList().then((filmList) => {
-        that.$data.items = filmList.data
+      AppServices.getFilmList().then(filmList => {
+        that.$data.items = filmList
+        window.console.log(filmList)
         that.$data.isLoading = false
       })
     },

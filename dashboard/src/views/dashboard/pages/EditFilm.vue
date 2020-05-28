@@ -6,7 +6,7 @@
   >
     <base-material-card
       icon="mdi-clipboard-text"
-      title="Create film informations"
+      title="Edit film informations"
       class="px-5 py-3"
     >
       <v-form>
@@ -16,28 +16,28 @@
               <v-text-field
                 v-model="filmData.id"
                 label="ID"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col cols="3">
               <v-text-field
                 v-model="filmData.vote_average"
                 label="Vote Average"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col cols="3">
               <v-text-field
                 v-model="filmData.release_date"
                 label="Release Date"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col>
               <v-checkbox
                 v-model="filmData.adult"
                 label="Adult"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
           </v-row>
@@ -46,28 +46,28 @@
               <v-text-field
                 v-model="filmData.title"
                 label="Title"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
                 v-model="filmData.original_title"
                 label="Original title"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
                 v-model="filmData.original_language"
                 label="Language"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
                 v-model="filmData.video_link"
                 label="Video Link"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
           </v-row>
@@ -76,37 +76,22 @@
               <v-text-field
                 v-model="filmData.poster_link"
                 label="Poster Link"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col cols="12">
               <v-text-field
                 v-model="filmData.trailer_link"
                 label="Trailer Link"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
             </v-col>
             <v-col cols="12">
               <v-textarea
                 v-model="filmData.overview"
                 label="Overview"
-                :disabled="disabled"
+                :disabled="editorDisabled"
               />
-            </v-col>
-            <v-col cols="12">
-              <v-file-input
-                label="Upload Subtitle"
-                accept=".vtt"
-                filled
-                @change="onAddFile"
-              />
-              <v-btn
-                color="info"
-                class="mr-0"
-                @click="uploadSubtitle"
-              >
-                Save
-              </v-btn>
             </v-col>
             <v-col
               cols="12"
@@ -119,6 +104,14 @@
               >
                 Save
               </v-btn>
+              <v-btn
+                color="error"
+                class="mr-0"
+                :disabled="editorDisabled"
+                @click="handleDelete"
+              >
+                Delete
+              </v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -129,44 +122,30 @@
 <script>
   import AppServices from '@/services/AppServices.js'
   export default {
-    name: 'NewFilm',
+    name: 'EditFilm',
     data () {
       return {
-        disabled: false, // disable text field
+        editorDisabled: false, // disable text field, prevent editor from edit other info than upload video + sub
         filmData: {
-          id: null,
-          adult: false,
-          title: null,
-          trailer_link: null,
-          original_language: null,
-          original_title: null,
-          overview: null,
-          poster_link: null,
-          release_date: null,
-          video_link: null,
-          vote_average: null,
         },
-        sub: null,
       }
+    },
+    created () {
+      this.$data.filmData = this.$store.getters.filmInfo
+      if (this.$store.state.user.role === 'editor') this.$data.editorDisabled = true
     },
     methods: {
       handleSubmit () {
-        if (confirm('Do you want to save?')) {
-          AppServices.createFilm(this.$data.filmData)
+        if (confirm('Do you really want to save?')) {
+          AppServices.updateFilm(this.$data.filmData)
           this.$router.push({ path: '/dashboard' })
         }
       },
-      onAddFile (file) {
-        this.$data.sub = file
-        console.log(this.$data.sub)
-      },
-      uploadSubtitle () {
-        const formData = new FormData()
-        formData.append('sub', this.$data.sub)
-        console.log(formData.getAll('sub'))
-        AppServices.uploadSubtitle(formData).then(result => {
-          alert(result)
-        })
+      handleDelete () {
+        if (confirm('Are you sure?')) {
+          AppServices.removeFilm(this.$data.filmData._id)
+          this.$router.push({ path: '/dashboard' })
+        }
       },
     },
   }

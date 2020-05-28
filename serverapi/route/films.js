@@ -2,7 +2,7 @@
 
 const express = require('express');
 const filmsRoute = express.Router();
-const filmService = require('../film/filmService.js')
+const filmService = require('../controllers/film/filmService.js')
 const fs = require('fs');
 const path = require('path');
 

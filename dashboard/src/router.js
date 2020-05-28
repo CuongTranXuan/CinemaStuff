@@ -35,6 +35,11 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/LoginForm'),
         },
         {
+          name: 'qrcode',
+          path: 'qrcode',
+          component: () => import('@/views/dashboard/pages/QRcode')
+        },
+        {
           name: 'Notifications',
           path: 'components/notifications',
           component: () => import('@/views/dashboard/component/Notifications'),
@@ -77,6 +82,6 @@ export default new Router({
         },
       ],
     },
-    { path: '*', redirect: '/' },
+    // { path: '*', redirect: '/login' },
   ],
 })

@@ -1,4 +1,4 @@
-const config = require('../config/config.json');
+const config = require('../../config/config.json');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('./userModel.js');
@@ -13,14 +13,29 @@ module.exports = {
 };
 
 async function authenticate({ username, password }) {
-    const user = await User.findOne({ username });
-    if (user && bcrypt.compareSync(password, user.hash)) {
-        const { hash, ...userWithoutHash } = user.toObject();
-        const token = jwt.sign({ sub: user.id }, config.secret, {expiresIn: 300 }); //expire in 1 day
+    const user = await User.findOne({ username: username });
+    if (!user) {
+        return res.status(404).send({message : "user not found"})
+    }
+    var passwordIsValid = bcrypt.compareSync(
+        password,
+        user.hash
+      );
+
+    if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid Password!"
+        });
+    }
+    if (passwordIsValid) {
+        const token = jwt.sign({ id: user.id }, config.secret, {expiresIn: 3600  }); //expire in 1 day
+        var role = user.role
         return {
-            auth: true,
-            ...userWithoutHash,
-            token : token
+            id: user.id,
+            username: user.username,
+            role: role,
+            accessToken: token
         };
     }
 }
@@ -35,7 +50,6 @@ async function getById(id) {
 
 async function create(userParam) {
     // validate
-    console.log(userParam)
     if (await User.findOne({ username: userParam.username })) {
         throw 'Username "' + userParam.username + '" is already taken';
     }

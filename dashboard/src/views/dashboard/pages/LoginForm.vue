@@ -35,7 +35,7 @@
         <div class="button-area">
           <button
             class="btn btn-primary pull-right"
-            @click="login()"
+            @click="handleLogin()"
           >
             Login
           </button>
@@ -53,6 +53,16 @@
         password: '', // not really need to encrypt it in client, but should send it via https
       }
     },
+    computed: {
+      loggedIn () {
+        return this.$store.state.status.loggedIn
+      },
+    },
+    created () {
+      if (this.loggedIn) {
+        this.$router.push('/')
+      }
+    },
     beforeMount () {
       let init = 1000
       setTimeout(function () {
@@ -61,12 +71,12 @@
       }, init)
     },
     methods: {
-      login () {
+      handleLogin () {
         const username = this.$data.username
         const password = this.$data.password
         this.$store.dispatch('login', { username, password })
-          .then(() => this.$router.push('/'))
-          .catch(err => console.log(err))
+          .then(() => { this.$router.push('/') })
+          .catch(err => { console.log(err) })
       },
       register () {
         alert('Coming soon ...')

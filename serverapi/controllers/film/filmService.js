@@ -1,5 +1,5 @@
-const config = require('../config/config.json');
-const db = require('../helpers/db.js');
+const config = require('../../config/config.json');
+const db = require('../../helpers/db.js');
 const Film = db.Film;
 
 

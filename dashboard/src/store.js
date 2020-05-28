@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import AuthServices from './services/AuthServices.js'
+
+const user = JSON.parse(localStorage.getItem('user'))
+const initialState = user // check user state from previous login
+  ? { status: { loggedIn: true }, user }
+  : { status: { loggedIn: false }, user: null }
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -8,9 +14,8 @@ export default new Vuex.Store({
     barColor: 'rgba(0, 0, 0, .8), rgba(0, 0, 0, .8)',
     barImage: 'https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-1.jpg',
     drawer: null,
-    status: '', // for authentication
-    token: localStorage.getItem('token') || '',
-    user: {},
+    status: initialState.status,
+    user: initialState.user,
     filmInfo: {}, // for editing film data
   },
   mutations: { // change the state of a vuex store
@@ -20,75 +25,59 @@ export default new Vuex.Store({
     SET_DRAWER (state, payload) {
       state.drawer = payload
     },
-    AUTH_REQUEST (state) {
-      state.status = 'loading'
-    },
-    AUTH_SUCCESS (state, token, user) {
-      state.status = 'success'
-      state.token = token
-      state.user = user
-    },
-    AUTH_ERROR (state) {
-      state.status = 'error'
-    },
-    LOGOUT (state) {
-      state.status = ''
-      state.token = ''
-    },
     SET_FILM_INFO (state, payload) {
       state.filmInfo = payload // get filmInfo from dashboard
+    },
+    loginSuccess (state, user) {
+      state.status.loggedIn = true
+      state.user = user
+    },
+    loginFailure (state) {
+      state.status.loggedIn = false
+      state.user = null
+    },
+    logout (state) {
+      state.status.loggedIn = false
+      state.user = null
+    },
+    registerSuccess (state) {
+      state.status.loggedIn = false
+    },
+    registerFailure (state) {
+      state.status.loggedIn = false
     },
   },
   actions: {
     login ({ commit }, user) {
-      return new Promise((resolve, reject) => {
-        commit('AUTH_REQUEST')
-        axios({ url: 'http://125.212.138.107/api/user/authenticate', data: user, method: 'POST' })
-        .then(res => {
-          const token = res.data.token
-          const user = res.data.user
-          localStorage.setItem('token', token)
-          axios.defaults.headers.common.Authorization = token
-          commit('AUTH_SUCCESS', token, user)
-          resolve(res)
-        })
-        .catch(err => {
-          commit('AUTH_ERROR')
-          localStorage.removeItem('token')
-          reject(err)
-        })
-      })
+      return AuthServices.login(user).then(
+        user => {
+          commit('loginSuccess', user)
+          return Promise.resolve(user)
+        },
+        error => {
+          commit('loginFailure')
+          return Promise.reject(error)
+        },
+      )
     },
     register ({ commit }, user) {
-      return new Promise((resolve, reject) => {
-        commit('AUTH_REQUEST')
-        axios({ url: 'http://125.212.138.107/api/user/register', data: user, method: 'POST' })
-        .then(resp => {
-          const token = resp.data.token
-          const user = resp.data.user
-          localStorage.setItem('token', token)
-          axios.defaults.headers.common.Authorization = token
-          commit('AUTH_SUCCESS', token, user)
-          resolve(resp)
-        })
-        .catch(err => {
-          commit('AUTH_ERROR', err)
-          localStorage.removeItem('token')
-          reject(err)
-        })
-      })
+      return AuthServices.register(user).then(
+        response => {
+          commit('registerSuccess')
+          return Promise.resolve(response.data)
+        },
+        error => {
+          commit('registerFailure')
+          return Promise.reject(error)
+        },
+      )
     },
     logout ({ commit }) {
-      return new Promise((resolve, reject) => {
-        commit('LOGOUT')
-        localStorage.removeItem('token')
-        delete axios.defaults.headers.common.Authorization
-        resolve()
-      })
+      AuthServices.logout()
+      commit('logout')
     },
   },
   getters: { // get the value of the attributes of vuex state
-    isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
     filmInfo: state => state.filmInfo,
   },
