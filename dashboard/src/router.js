@@ -37,7 +37,7 @@ export default new Router({
         {
           name: 'qrcode',
           path: 'qrcode',
-          component: () => import('@/views/dashboard/pages/QRcode')
+          component: () => import('@/views/dashboard/pages/QRcode'),
         },
         {
           name: 'Notifications',

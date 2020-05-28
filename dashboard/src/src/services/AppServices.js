@@ -34,7 +34,7 @@ function createFilm (filmParams) {
         headers: header,
         body: JSON.stringify(filmParams),
     }
-    return fetch('http://125.212.138.107/api/admin/films/create', requestOptions)
+    return fetch('http://125.212.203.148/api/admin/films/create', requestOptions)
 }
 
 function removeFilm (id) {

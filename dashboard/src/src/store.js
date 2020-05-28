@@ -43,7 +43,7 @@ export default new Vuex.Store({
     login ({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST')
-        axios({ url: 'http://125.212.138.107/api/user/authenticate', data: user, method: 'POST' })
+        axios({ url: 'http://125.212.203.148/api/user/authenticate', data: user, method: 'POST' })
         .then(res => {
           const token = res.data.token
           const user = res.data.user
@@ -62,7 +62,7 @@ export default new Vuex.Store({
     register ({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST')
-        axios({ url: 'http://125.212.138.107/api/user/register', data: user, method: 'POST' })
+        axios({ url: 'http://125.212.203.148/api/user/register', data: user, method: 'POST' })
         .then(resp => {
           const token = resp.data.token
           const user = resp.data.user

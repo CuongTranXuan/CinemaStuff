@@ -2,7 +2,7 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 7000,
-    public: 'http://125.212.138.107/dashboard/',
+    public: 'http://125.212.203.148/dashboard/',
     watchOptions: {
       poll: true,
     },

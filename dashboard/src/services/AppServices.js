@@ -18,7 +18,7 @@ function getFilmList () {
         method: 'GET',
         headers: header,
     }
-    return fetch('http://125.212.138.107/api/films', requestOptions)
+    return fetch('http://125.212.203.148/api/films', requestOptions)
             .then(handleResponse)
 }
 
@@ -33,7 +33,7 @@ function updateFilm (filmParams) {
         headers: header,
         body: JSON.stringify(filmParams),
     }
-    return fetch(`http://125.212.138.107/api/admin/films/${filmParams._id}`, requestOptions).then(handleResponse)
+    return fetch(`http://125.212.203.148/api/admin/films/${filmParams._id}`, requestOptions).then(handleResponse)
 }
 
 function createFilm (filmParams) {
@@ -47,7 +47,7 @@ function createFilm (filmParams) {
         headers: header,
         body: JSON.stringify(filmParams),
     }
-    return fetch('http://125.212.138.107/api/admin/films/create', requestOptions).then(handleResponse)
+    return fetch('http://125.212.203.148/api/admin/films/create', requestOptions).then(handleResponse)
 }
 
 function removeFilm (id) {
@@ -56,17 +56,16 @@ function removeFilm (id) {
         headers: authHeader(),
     }
 
-    return fetch(`http://125.212.138.107/api/admin/films/${id}`, requestOptions).then(handleResponse)
+    return fetch(`http://125.212.203.148/api/admin/films/${id}`, requestOptions).then(handleResponse)
 }
 function uploadSubtitle (formData) {
     const header = authHeader()
-    header['Content-Type'] = 'multipart/form-data'
     const requestOptions = {
         method: 'POST',
         headers: header,
         body: formData,
     }
-    return fetch('http://125.212.138.107/api/admin/upload_sub', requestOptions).then(handleResponse)
+    return fetch('http://125.212.203.148/api/admin/upload_sub', requestOptions).then(handleResponse)
 }
 
 function handleResponse (response) {
