@@ -93,21 +93,56 @@
                 :disabled="disabled"
               />
             </v-col>
-            <v-col cols="12">
-              <v-file-input
-                label="Upload Subtitle"
-                accept=".vtt"
-                filled
-                @change="onAddFile"
-              />
-              <v-btn
-                color="info"
-                class="mr-0"
-                @click="uploadSubtitle"
-              >
-                Save
-              </v-btn>
-            </v-col>
+            <v-row>
+              <v-col cols="3">
+                <v-file-input
+                  label="Add .mkv file"
+                  accept=".mkv"
+                  filled
+                  show-size
+                  dense
+                  prepend-icon="mdi-movie-open"
+                  v-model="video"
+                />
+                <v-btn
+                  color="info"
+                  class="mr-0"
+                  @click="uploadVideo"
+                >
+                  Upload
+                </v-btn>
+              </v-col>
+              <v-col cols="3">
+                <v-file-input
+                  label="Add .vtt file"
+                  accept=".vtt"
+                  filled
+                  show-size
+                  dense
+                  prepend-icon="mdi-subtitles"
+                  :disabled="uploadSubDisabled"
+                  v-model="sub"
+                />
+                <v-btn
+                  color="info"
+                  class="mr-0"
+                  @click="uploadSubtitle"
+                  :disabled="uploadSubDisabled"
+                >
+                  Upload
+                </v-btn>
+              </v-col>
+              <v-col>
+                <v-btn
+                  color="info"
+                  class="mr-0"
+                  @click="performEncode"
+                  :disabled="encodeDisabled"
+                >
+                  Encode film
+                </v-btn>
+              </v-col>
+            </v-row>
             <v-col
               cols="12"
               class="text-right"
@@ -133,6 +168,8 @@
     data () {
       return {
         disabled: false, // disable text field
+        encodeDisabled: true, //only when uploaded video + sub then this button showed up
+        uploadSubDisabled: true, // show up when video uploaded
         filmData: {
           id: null,
           adult: false,
@@ -147,6 +184,7 @@
           vote_average: null,
         },
         sub: null,
+        video: null
       }
     },
     methods: {
@@ -156,18 +194,38 @@
           this.$router.push({ path: '/dashboard' })
         }
       },
-      onAddFile (file) {
-        this.$data.sub = file
-        console.log(this.$data.sub)
-      },
       uploadSubtitle () {
+        var that = this
         const formData = new FormData()
         formData.append('sub', this.$data.sub)
-        console.log(formData.getAll('sub'))
-        AppServices.uploadSubtitle(formData).then(result => {
-          alert(result)
-        })
+        if (this.$data.sub === null) {
+          alert('you must choose a file')
+        } 
+        else {
+          AppServices.uploadSubtitle(formData).then(result => {
+            alert(result.sub)
+            that.$data.encodeDisabled = false
+          })
+        }
       },
+      uploadVideo () {
+        var that = this
+        const formData = new FormData()
+        formData.append('video', this.$data.video)
+        if (this.$data.video === null) { 
+          alert('you must choose a file') 
+        } 
+        else {
+          AppServices.uploadVideo(formData).then(result => {
+            alert(result.video)
+            that.$data.filmData.video_link = `http://125.212.138.107/hls/master_${result.filename}.m3u8`
+            that.$data.uploadSubDisabled = false
+          })
+        }
+      },
+      performEncode(){
+        alert('yay')
+      }
     },
   }
 </script>

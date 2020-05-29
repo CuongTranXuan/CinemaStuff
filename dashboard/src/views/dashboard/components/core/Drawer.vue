@@ -31,7 +31,7 @@
           contain
         >
           <v-img
-            src="http://125.212.203.148/dashboard/labicon.ico"
+            src="http://125.212.138.107/dashboard/labicon.ico"
             max-height="30"
           />
         </v-list-item-avatar>

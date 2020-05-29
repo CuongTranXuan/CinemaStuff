@@ -21,7 +21,6 @@
             type="text"
             placeholder="Username"
           >
-        <!-- <label for="username">Username</label>     -->
         </div>
         <div class="form-group">
           <input
@@ -30,27 +29,85 @@
             type="password"
             placeholder="Password"
           >
-        <!-- <label for="Password">Password</label>     -->
         </div>
-        <div class="button-area">
-          <button
-            class="btn btn-primary pull-right"
-            @click="handleLogin()"
+        <div>
+          <v-btn
+            color="primary"
+            dark
+            dense
+            @click.stop="handleLogin"
           >
-            Login
-          </button>
+            login
+          </v-btn>
         </div>
+<!--************************************************ Support OTP ******************************************** -->
+        <v-dialog
+          v-model="OTPcheck"
+        >
+          <v-card v-if="OTPenabled">
+            <v-card-title>
+              <span class="headline">OTP code</span>
+            </v-card-title>
+            <v-card-text>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                      v-model="code"
+                      label="OTP code"
+                  />
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                dense
+                @click="dialog = false"
+              >
+                Agree
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-card v-else>
+            <v-card-title>
+              <span class="headline">Scan by Google Authenticate</span>
+            </v-card-title>
+            <v-container>
+              <v-row justify="center">
+                <v-col>
+                  <img :src="`${qrCode}`">
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                dense
+                @click="dialog = false"
+              >
+                Agree
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </form>
     </div>
   </v-content>
 </template>
 <script>
+  import AuthServices from '@/services/AuthServices.js'
   export default {
     name: 'LoginForm',
     data () {
       return {
         username: '',
         password: '', // not really need to encrypt it in client, but should send it via https
+        code: '',
+        OTPenabled: false, //scan QR or use code to login
+        OTPcheck: false,
+        qrCode:''
       }
     },
     computed: {
@@ -75,8 +132,18 @@
         const username = this.$data.username
         const password = this.$data.password
         this.$store.dispatch('login', { username, password })
-          .then(() => { this.$router.push('/') })
-          .catch(err => { console.log(err) })
+          .then(() => {
+             AuthServices.getQRcode(this.$store.state.user.username).then((response) => {
+              if (response.data.message) {
+                this.$data.qrCode = response.data.qrcode
+              }
+            })
+            this.$data.OTPcheck = true
+            // this.$router.push('/')
+          })
+          .catch(err => {
+              alert('login failed, check your username and password')
+            })
       },
       register () {
         alert('Coming soon ...')
@@ -84,7 +151,6 @@
     },
   }
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 * {

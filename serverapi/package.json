@@ -40,6 +40,8 @@
     "nodemon": "^2.0.2",
     "path": "^0.12.7",
     "path-to-regexp": "^6.1.0",
-    "rootpath": "^0.1.2"
+    "qrcode": "^1.4.4",
+    "rootpath": "^0.1.2",
+    "speakeasy": "^2.0.0"
   }
 }

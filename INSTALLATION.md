@@ -178,7 +178,7 @@
     sudo adduser --system --home /nonexistent --shell /bin/false --no-create-home --disabled-login --disabled-password --gecos "nginx user" --group nginx
 
     # Create NGINX cache directories and set proper permissions
-    sudo mkdir -p /var/cache/nginx/client_temp /var/cache/nginx/fastcgi_temp /var/cache/nginx/proxy_temp /var/cache/nginx/scgi_temp /var/cache/nginx/uwsgi_temp
+    sudo mkdir -p /var/cache/nginx/client_temp /var/cache/nginx/fastcgi_temp /var/cache/nginx/proxy_temp /var/cache/nginx/scgi_temp /var/cache/nginx/uwsgi_temp /var/lib/nginx /var/lib/nginx/body /var/lib/nginx/fastcgi
     sudo chmod 700 /var/cache/nginx/*
     sudo chown nginx:root /var/cache/nginx/*
 
