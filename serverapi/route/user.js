@@ -57,7 +57,6 @@ function _delete(req, res, next) {
 }
 //support OTP
 function getQRcode(req,res,next) {
-    console.log(req.body.username)
     userService.getQRcode(req.body.username)
         .then(result => {
             res.status(200).json({message: "qr generated", qrcode: result})

@@ -40,7 +40,7 @@
             login
           </v-btn>
         </div>
-<!--************************************************ Support OTP ******************************************** -->
+        <!--************************************************ Support OTP ******************************************** -->
         <v-dialog
           v-model="OTPcheck"
         >
@@ -48,24 +48,39 @@
             <v-card-title>
               <span class="headline">OTP code</span>
             </v-card-title>
+            <v-container>
+              <v-row justify="center">
+                <v-col>
+                  <img :src="`${qrCode}`">
+                </v-col>
+              </v-row>
+            </v-container>
             <v-card-text>
               <v-row>
                 <v-col>
                   <v-text-field
-                      v-model="code"
-                      label="OTP code"
+                    v-model="code"
+                    label="OTP code"
                   />
                 </v-col>
               </v-row>
             </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
+              <v-btn
+                color="info darken-1"
+                dense
+                @click="resetQRcode"
+              >
+                Reset QR
+              </v-btn>
+              <v-spacer />
               <v-btn
                 color="green darken-1"
                 dense
-                @click="dialog = false"
+                @click="handleAuthenticate"
               >
-                Agree
+                Authenticate
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -80,14 +95,24 @@
                 </v-col>
               </v-row>
             </v-container>
+            <v-card-text>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="code"
+                    label="OTP code"
+                  />
+                </v-col>
+              </v-row>
+            </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn
                 color="green darken-1"
                 dense
-                @click="dialog = false"
+                @click="handleAuthenticate"
               >
-                Agree
+                Authenticate
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -105,9 +130,9 @@
         username: '',
         password: '', // not really need to encrypt it in client, but should send it via https
         code: '',
-        OTPenabled: false, //scan QR or use code to login
+        OTPenabled: false, // scan QR or use code to login
         OTPcheck: false,
-        qrCode:''
+        qrCode: '',
       }
     },
     computed: {
@@ -133,17 +158,44 @@
         const password = this.$data.password
         this.$store.dispatch('login', { username, password })
           .then(() => {
-             AuthServices.getQRcode(this.$store.state.user.username).then((response) => {
-              if (response.data.message) {
-                this.$data.qrCode = response.data.qrcode
-              }
-            })
+            if (this.$store.state.user.requireQR === false) {
+              this.$data.OTPenabled = true
+              AuthServices.getQRcode(this.$store.state.user.id).then(res => {
+                this.$data.qrcode = res.data
+              })
+            } else {
+              AuthServices.createQRcode(this.$data.username).then((response) => {
+                if (response.data.message) {
+                  this.$data.qrCode = response.data.qrcode
+                }
+              })
+            }
             this.$data.OTPcheck = true
-            // this.$router.push('/')
           })
           .catch(err => {
-              alert('login failed, check your username and password')
-            })
+            window.console.log(err)
+            alert('login failed, check your username and password')
+          })
+      },
+      handleAuthenticate () {
+        AuthServices.verifyOTP(this.$data.username, this.$data.code).then(res => {
+          if (res.data.authenticated){
+            this.$store.commit('authenticateSuccess')
+            this.$router.push('/')
+          } else {
+            this.$store.commit('authenticateFailure')
+            alert('Your OTP is not match')
+          }
+        })
+      },
+      resetQRcode(){
+        if (confirm("Are you sure to reset QR code, which means every devices logged in will be logged out?")) {
+           AuthServices.createQRcode(this.$data.username).then((response) => {
+                if (response.data.message) {
+                  this.$data.qrCode = response.data.qrcode
+                }
+              })
+        }
       },
       register () {
         alert('Coming soon ...')
