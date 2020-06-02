@@ -11,6 +11,7 @@ export default {
     removeFilm,
     uploadSubtitle,
     uploadVideo,
+    encodeVideo,
 }
 
 function getFilmList () {
@@ -79,6 +80,20 @@ function uploadVideo (formData) {
         body: formData,
     }
     return fetch(`${API_URL}/admin/upload_video`, requestOptions).then(handleResponse)
+}
+
+function encodeVideo (data) {
+    const header = authHeader()
+    header['Content-Type'] = 'application/json'
+    const requestOptions = {
+        method: 'POST',
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: header,
+        body: JSON.stringify(data),
+    }
+    return fetch(`${API_URL}/admin/encode`, requestOptions).then(handleResponse)
 }
 
 function handleResponse (response) {

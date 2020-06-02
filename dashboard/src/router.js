@@ -34,30 +34,6 @@ export default new Router({
           path: 'login',
           component: () => import('@/views/dashboard/pages/LoginForm'),
         },
-        {
-          name: 'Notifications',
-          path: 'components/notifications',
-          component: () => import('@/views/dashboard/component/Notifications'),
-          meta: {
-            requiresAuth: true,
-          },
-        },
-        {
-          name: 'Icons',
-          path: 'components/icons',
-          component: () => import('@/views/dashboard/component/Icons'),
-          meta: {
-            requiresAuth: true,
-          },
-        },
-        {
-          name: 'Typography',
-          path: 'components/typography',
-          component: () => import('@/views/dashboard/component/Typography'),
-          meta: {
-            requiresAuth: true,
-          },
-        },
         // Films
         {
           name: 'Add new film',

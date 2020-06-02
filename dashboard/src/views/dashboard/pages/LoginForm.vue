@@ -161,7 +161,7 @@
             if (this.$store.state.user.requireQR === false) {
               this.$data.OTPenabled = true
               AuthServices.getQRcode(this.$store.state.user.id).then(res => {
-                this.$data.qrcode = res.data
+                this.$data.qrCode = res.data
               })
             } else {
               AuthServices.createQRcode(this.$data.username).then((response) => {
@@ -179,7 +179,7 @@
       },
       handleAuthenticate () {
         AuthServices.verifyOTP(this.$data.username, this.$data.code).then(res => {
-          if (res.data.authenticated){
+          if (res.data.authenticated) {
             this.$store.commit('authenticateSuccess')
             this.$router.push('/')
           } else {
@@ -188,13 +188,13 @@
           }
         })
       },
-      resetQRcode(){
-        if (confirm("Are you sure to reset QR code, which means every devices logged in will be logged out?")) {
-           AuthServices.createQRcode(this.$data.username).then((response) => {
-                if (response.data.message) {
-                  this.$data.qrCode = response.data.qrcode
-                }
-              })
+      resetQRcode () {
+        if (confirm('Are you sure to reset QR code, which means every devices logged in will be logged out?')) {
+          AuthServices.createQRcode(this.$data.username).then((response) => {
+            if (response.data.message) {
+              this.$data.qrCode = response.data.qrcode
+            }
+          })
         }
       },
       register () {

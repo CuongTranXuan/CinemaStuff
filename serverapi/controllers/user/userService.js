@@ -10,6 +10,7 @@ module.exports = {
     authenticate,
     getAll,
     getById,
+    getRole,
     create,
     update,
     delete: _delete,
@@ -52,10 +53,17 @@ async function authenticate({ username, password }) {
 async function getAll() {
     return await User.find()
 }
-
+async function getRole(id){
+    const user = await User.findById(id)
+    console.log(user)
+    return user
+}
 async function getById(id) {
     console.log(id)
     const user = await User.findById(id)
+    if (!user.secret){
+        getQRcode(user.username)
+    }
     const url = speakeasy.otpauthURL({
         secret: user.secret,
         label: 'Fcinema',

@@ -1,178 +1,272 @@
 <template>
   <v-container
-    id="user-profile"
+    id="user"
     fluid
     tag="section"
   >
-    <v-row justify="center">
-      <v-col
-        cols="12"
-        md="8"
-      >
-        <base-material-card>
-          <template v-slot:heading>
-            <div class="display-2 font-weight-light">
-              Edit Profile
-            </div>
-
-            <div class="subtitle-1 font-weight-light">
-              Complete your profile
-            </div>
-          </template>
-
-          <v-form>
-            <v-container class="py-0">
-              <v-row>
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    label="Company (disabled)"
-                    disabled
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    class="purple-input"
-                    label="User Name"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    label="Email Address"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="6"
-                >
-                  <v-text-field
-                    label="First Name"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="6"
-                >
-                  <v-text-field
-                    label="Last Name"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col cols="12">
-                  <v-text-field
-                    label="Adress"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    label="City"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    label="Country"
-                    class="purple-input"
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  md="4"
-                >
-                  <v-text-field
-                    class="purple-input"
-                    label="Postal Code"
-                    type="number"
-                  />
-                </v-col>
-
-                <v-col cols="12">
-                  <v-textarea
-                    class="purple-input"
-                    label="About Me"
-                    value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-                  />
-                </v-col>
-
-                <v-col
-                  cols="12"
-                  class="text-right"
-                >
-                  <v-btn
-                    color="success"
-                    class="mr-0"
-                  >
-                    Update Profile
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-form>
-        </base-material-card>
-      </v-col>
-
-      <v-col
-        cols="12"
-        md="4"
-      >
-        <base-material-card
-          class="v-card-profile"
-          avatar="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
-        >
-          <v-card-text class="text-center">
-            <h6 class="display-1 mb-1 grey--text">
-              CEO / CO-FOUNDER
-            </h6>
-
-            <h4 class="display-2 font-weight-light mb-3 black--text">
-              Alec Thompson
-            </h4>
-
-            <p class="font-weight-light grey--text">
-              Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-            </p>
-
-            <v-btn
-              color="success"
-              rounded
-              class="mr-0"
-            >
-              Follow
-            </v-btn>
-          </v-card-text>
-        </base-material-card>
-      </v-col>
-    </v-row>
+    <base-material-card
+      color="success"
+      class="px-5 py-3"
+    >
+      <template v-slot:heading>
+        <v-row>
+          <div class="display-2 font-weight-light">
+            Admin/Editor List
+          </div>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            @click="openNew"
+          >
+            Add
+          </v-btn>
+        </v-row>
+      </template>
+      <v-card-text>
+        <v-data-table
+          :key="reRender"
+          :headers="headers"
+          :items="items"
+          item-key="id"
+          single-select
+          :loading="isLoading"
+          loading-text="Loading... Please wait"
+          no-data-text="No data to display"
+          @click:row="rowClick"
+        />
+      </v-card-text>
+    </base-material-card>
+    <v-dialog
+      v-model="modalToggle"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">User Profile</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                v-if="!newUser"
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  v-model="selectedItem.id"
+                  label="User ID"
+                  required
+                  disabled
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  v-model="selectedItem.username"
+                  label="Username"
+                />
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  v-if="!newUser"
+                  v-model="selectedItem.password"
+                  label="Hashed Password"
+                />
+                <v-text-field
+                  v-else
+                  v-model="selectedItem.password"
+                  type="password"
+                  label="Password"
+                />
+              </v-col>
+              <v-col cols="6">
+                <v-select
+                  v-model="selectedItem.role"
+                  :items="['admin','editor']"
+                  label="Role"
+                />
+              </v-col>
+              <v-col
+                v-if="!newUser"
+                cols="6"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  v-model="selectedItem.createdDate"
+                  label="Created Date"
+                  required
+                  disabled
+                />
+              </v-col>
+              <v-col
+                v-if="!newUser"
+                cols="12"
+              >
+                <v-text-field
+                  v-model="selectedItem.secret"
+                  label="OTP Secret"
+                  disabled
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions v-if="!newUser">
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="modalToggle = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="handleDelete"
+          >
+            Delete
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="handleUpdate"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+        <v-card-actions v-else>
+          <v-spacer />
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="modalToggle = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="handleCreate"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+  import AuthServices from '@/services/AuthServices.js'
   export default {
-    //
+    data () {
+      return {
+        modalToggle: false,
+        isLoading: true,
+        reRender: 0,
+        selectedItem: {},
+        newUser: false,
+        headers: [
+          {
+            sortable: true,
+            text: 'ID',
+            value: 'id',
+          },
+          {
+            sortable: true,
+            text: 'Username',
+            value: 'username',
+          },
+          {
+            sortable: true,
+            text: 'Hashed Password',
+            value: 'password',
+          },
+          {
+            sortable: false,
+            text: 'Role',
+            value: 'role',
+          },
+          {
+            sortable: false,
+            text: 'OTP secret',
+            value: 'secret',
+          },
+          {
+            sortable: false,
+            text: 'Created Date',
+            value: 'createdDate',
+          },
+        ],
+        items: [],
+      }
+    },
+    created () {
+      AuthServices.getAll(this.$store.state.user.id).then(userList => {
+        this.$data.items = userList
+        this.$data.isLoading = false
+      })
+    },
+    methods: {
+      rowClick: function (item, row) {
+        row.select(true)
+        this.newUser = false
+        this.selectedItem = item
+        this.modalToggle = true
+      },
+      handleDelete () {
+        if (confirm('are you sure to remove this user?')) {
+          AuthServices._delete(this.selectedItem.id).then(res => {
+            alert(res.data.message)
+            this.modalToggle = false
+            AuthServices.getAll(this.$store.state.user.id).then(userList => {
+              this.$data.items = userList
+              this.$data.isLoading = false
+              this.reRender += 1
+            })
+          })
+        }
+      },
+      handleUpdate () {
+        if (confirm('Are you sure to save to database?')) {
+          AuthServices._update(this.selectedItem.id, this.selectedItem).then(res => {
+            alert(res.data.message)
+            this.modalToggle = false
+            AuthServices.getAll(this.$store.state.user.id).then(userList => {
+              this.$data.items = userList
+              this.$data.isLoading = false
+              this.reRender += 1
+            })
+          })
+        }
+      },
+      openNew () {
+        this.modalToggle = true
+        this.newUser = true
+        this.selectedItem = {}
+      },
+      handleCreate () {
+        if (confirm('Are you sure to create user?')) {
+          AuthServices.create(this.selectedItem).then(res => {
+            alert(res.data.message)
+            this.modalToggle = false
+            AuthServices.getAll(this.$store.state.user.id).then(userList => {
+              this.$data.items = userList
+              this.$data.isLoading = false
+              this.reRender += 1
+            })
+          })
+        }
+      },
+    },
   }
 </script>

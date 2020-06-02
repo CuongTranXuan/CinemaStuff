@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { authHeader } from '@/services/AuthHeader.js'
+import store from '../store.js'
 const API_URL = 'http://125.212.203.148/api/user'
 
 class AuthService {
@@ -52,6 +53,40 @@ class AuthService {
             code: code,
         }, {
             headers: header,
+        })
+    }
+
+    getAll (id) {
+        const header = authHeader()
+        return axios.get(`${API_URL}`, {
+            headers: header,
+        }).then(response => {
+            return response.data
+        })
+    }
+
+    _delete (id) {
+        const header = authHeader()
+        return axios.delete(`${API_URL}/${id}`, { headers: header })
+    }
+
+    _update (id, userParams) {
+        const header = authHeader()
+        return axios.put(`${API_URL}/${id}`, {
+            id: userParams.id,
+            username: userParams.username,
+            password: userParams.password,
+            role: userParams.role,
+            secret: userParams.secret,
+            createdDate: userParams.createdDate,
+        }, { headers: header })
+    }
+
+    create (userParams) {
+        return axios.post(`${API_URL}/register`, {
+            username: userParams.username,
+            password: userParams.password,
+            role: userParams.role,
         })
     }
 }

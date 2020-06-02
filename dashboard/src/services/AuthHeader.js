@@ -4,7 +4,8 @@ export function authHeader () {
 
     if (user && user.accessToken) {
         // for Node.js Express back-end
-        return { 'x-access-token': user.accessToken }
+        return { 'x-access-token': user.accessToken,
+                 'x-userid': user.id }
       } else {
         return {}
       }
