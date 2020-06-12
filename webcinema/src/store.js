@@ -26,11 +26,12 @@ export default new Vuex.Store({
         title: type == 'movie' ? info.title : info.name,
         year: type == 'movie' ? info.release_date : info.first_air_date,
         overview: info.overview,
-        homepage: info.homepage,
+        adult: info.adult,
         poster_link: info.poster_link,
         trailer_link: info.trailer_link,
         vote_average: info.vote_average,
-        video_link: info.video_link
+        video_link: info.video_link,
+        id: info.id
       };
       Vue.set(state, 'itemInfo', itemInfo);
     }

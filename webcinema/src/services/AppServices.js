@@ -14,5 +14,13 @@ export default {
   getMoviesUpcoming(){
     const url = `/films`
     return API.get(url);
+  },
+  startPlay(id){
+    const url = `/statistic/play/${id}`
+    return API.get(url)
+  },
+  endPlay(id) {
+    const url = `/statistic/end/${id}`
+    return API.get(url)
   }
 };

@@ -3,10 +3,11 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     username: { type: String, unique: true, required: true },
-    hash: { type: String, required: true },
+    password: {type: String, required: true},
+    accessToken: { type: String },// time-based, only provided after qr check pass
     createdDate: { type: Date, default: Date.now },
     role: { type: String, required: true},
-    shared_key: {type: String} //use this key to gen QR code
+    secret: {type: String} //secret.base32 stored from speakeasy
 });
 
 schema.set('toJSON', { virtuals: true });

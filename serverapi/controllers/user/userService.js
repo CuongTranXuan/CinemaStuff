@@ -10,6 +10,7 @@ module.exports = {
     authenticate,
     getAll,
     getById,
+    getRole,
     create,
     update,
     delete: _delete,
@@ -24,7 +25,7 @@ async function authenticate({ username, password }) {
     }
     var passwordIsValid = bcrypt.compareSync(
         password,
-        user.hash
+        user.password
       );
 
     if (!passwordIsValid) {
@@ -34,37 +35,56 @@ async function authenticate({ username, password }) {
         }
     }
     if (passwordIsValid) {
-        const token = jwt.sign({ id: user.id }, config.secret, {expiresIn: 3600  }); //expire in 1 day
-        var role = user.role
+        const token = jwt.sign({ id: user.id }, config.secret, {expiresIn: 3600  }) //expire in 1 hour
+        var isRequireQR = false
+        if (user.secret === '') {
+            isRequireQR = true
+        }
         return {
             id: user.id,
             username: user.username,
-            role: role,
+            role: user.role,
             accessToken: token,
-            shared_key: ''
-        };
+            requireQR: isRequireQR
+        }
     }
 }
 
 async function getAll() {
-    return await User.find().select('-hash');
+    return await User.find()
 }
-
+async function getRole(id){
+    const user = await User.findById(id)
+    console.log(user)
+    return user
+}
 async function getById(id) {
-    return await User.findById(id).select('-hash');
+    console.log(id)
+    const user = await User.findById(id)
+    if (!user.secret){
+        return await getQRcode(user.username)
+    } else{
+        const url = speakeasy.otpauthURL({
+            secret: user.secret,
+            label: 'Fcinema',
+            encoding: 'base32',
+            issuer: user.username
+        })
+        return qrcode.toDataURL(url)
+    }
 }
 
 async function create(userParam) {
     // validate
     if (await User.findOne({ username: userParam.username })) {
-        throw 'Username "' + userParam.username + '" is already taken';
+        return res.status(404).send({message : "username has been used, choose another one"})
     }
 
-    const user = new User(userParam);
+    const user = new User(userParam)
 
     // hash password
     if (userParam.password) {
-        user.hash = bcrypt.hashSync(userParam.password, 10);
+        user.password = bcrypt.hashSync(userParam.password, 10);
     }
 
     // save user
@@ -82,7 +102,7 @@ async function update(id, userParam) {
 
     // hash password if it was entered
     if (userParam.password) {
-        userParam.hash = bcrypt.hashSync(userParam.password, 10)
+        userParam.password = bcrypt.hashSync(userParam.password, 10)
     }
 
     // copy userParam properties to user
@@ -96,38 +116,36 @@ async function _delete(id) {
 }
 
 async function getQRcode(username){ //call when user want to renew qr code to add to another app on another phone
-    // const key = config.master_qr_key
-    // const algorithm = 'sha512'
-    // let user = await User.findOne({username: username})
-    // if (user.shared_key ===  ''){
-    //     let text = user._id
-    //     text = text + Date.now()
-    //     const hmac = crypto.createHmac(algorithm, key).update(text).digest('hex')
-    //     Object.assign(user,{shared_key: hmac})
-    //     await user.save()
-    //     return hmac
-    // }
-    // else return user.shared_key
-    
-    let user = await User.findOne({username:username})
+    let user = await User.findOne({username: username})
     const secret = speakeasy.generateSecret({name: "Fcinema"})
-    user['shared_key'] = secret.base32
+    user['secret'] = secret.base32
     user.save()
-    return qrcode.toDataURL(secret.otpauth_url)
+    const url = speakeasy.otpauthURL({
+        secret: secret.base32,
+        label: 'Fcinema',
+        encoding: 'base32',
+        issuer: user.username
+    })
+    return qrcode.toDataURL(url)
 }
 async function checkQRcode(username, code){
-    const user = await User.findOne({username: username})
-    const reply = notp.totp.verify(user.shared_key, code)
+    let user = await User.findOne({username: username})
+    const reply = speakeasy.totp.verify({
+        secret: user.secret,
+        encoding: 'base32',
+        token: code,
+        window: 2
+    })
     if (reply) {
         return{
             message: "code valid",
-            authenticated: true
+            authenticated: true,
         }
     }
     else{
         return{
             message: "code invalid",
-            authenticated: false
+            authenticated: false,
         }
     }
 }

@@ -23,20 +23,22 @@ verifyToken = (req, res, next) => {
     });
 }
 isAdmin = (req, res, next) => {
-    userService.getById(req.userId).then(user => {
-        if (user.role === 'admin') {
-            next()
-            return
-        } else {
-            res.status(403).send({
-                message: "You aren't admin"
-            })
-            return;
-        }
+    let userID = req.headers["x-userid"]
+    userService.getRole(userID).then(user => {
+      if (user.role === 'admin') {
+        next()
+        return
+    } else {
+        res.status(403).send({
+            message: "You aren't admin"
+        })
+        return;
+    }
     })
 }
 isEditor = (req, res, next) => {
-    userService.getById(req.userId).then(user => {
+  let userID = req.headers["x-userid"]
+  userService.getRole(userID).then(user => {
         if (user.role === 'editor') {
             next()
             return

@@ -5,5 +5,6 @@ mongoose.Promise = global.Promise;
 
 module.exports = {
     User: require('../controllers/user/userModel.js'),
-    Film: require('../controllers/film/filmModel.js')
+    Film: require('../controllers/film/filmModel.js'),
+    History: require('../controllers/history/historyModel.js')
 };

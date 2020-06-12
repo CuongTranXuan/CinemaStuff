@@ -93,6 +93,54 @@
                 :disabled="editorDisabled"
               />
             </v-col>
+            <v-row>
+              <v-col cols="3">
+                <v-file-input
+                  v-model="video"
+                  label="Add .mkv file"
+                  accept=".mkv"
+                  filled
+                  show-size
+                  dense
+                  prepend-icon="mdi-movie-open"
+                />
+                <v-btn
+                  color="info"
+                  class="mr-0"
+                  @click="uploadVideo"
+                >
+                  Upload
+                </v-btn>
+              </v-col>
+              <v-col cols="3">
+                <v-file-input
+                  v-model="sub"
+                  label="Add .vtt file"
+                  accept=".vtt"
+                  filled
+                  show-size
+                  dense
+                  prepend-icon="mdi-subtitles"
+                />
+                <v-btn
+                  color="info"
+                  class="mr-0"
+                  @click="uploadSubtitle"
+                >
+                  Upload
+                </v-btn>
+              </v-col>
+              <v-col>
+                <v-btn
+                  color="info"
+                  class="mr-0"
+                  :disabled="encodeDisabled"
+                  @click="performEncode"
+                >
+                  Encode film
+                </v-btn>
+              </v-col>
+            </v-row>
             <v-col
               cols="12"
               class="text-right"
@@ -126,8 +174,22 @@
     data () {
       return {
         editorDisabled: false, // disable text field, prevent editor from edit other info than upload video + sub
+        encodeDisabled: false, // only when uploaded video + sub then this button showed up
         filmData: {
+          id: null,
+          adult: false,
+          title: null,
+          trailer_link: null,
+          original_language: null,
+          original_title: null,
+          overview: null,
+          poster_link: null,
+          release_date: null,
+          video_link: null,
+          vote_average: null,
         },
+        sub: null,
+        video: null,
       }
     },
     created () {
@@ -138,14 +200,50 @@
       handleSubmit () {
         if (confirm('Do you really want to save?')) {
           AppServices.updateFilm(this.$data.filmData)
-          this.$router.push({ path: '/dashboard' })
+          this.$router.push({ path: '/' })
         }
       },
       handleDelete () {
         if (confirm('Are you sure?')) {
           AppServices.removeFilm(this.$data.filmData._id)
-          this.$router.push({ path: '/dashboard' })
+          this.$router.push({ path: '/' })
         }
+      },
+      uploadSubtitle () {
+        const formData = new FormData()
+        formData.append('sub', this.$data.sub)
+        if (this.$data.sub === null) {
+          alert('you must choose a file')
+        } else {
+          AppServices.uploadSubtitle(formData).then(result => {
+            alert(result.filename)
+          })
+        }
+      },
+      uploadVideo () {
+        const formData = new FormData()
+        formData.append('video', this.$data.video)
+        if (this.$data.video === null) {
+          alert('you must choose a file')
+        } else {
+          AppServices.uploadVideo(formData).then(result => {
+            alert(result.filename)
+            const filename = result.filename.replace(/\..+$/, '')// trim the extension away
+            this.$data.filmData.video_link = `http://125.212.138.107/hls/master_${filename}.m3u8`
+            this.$data.videoFile = result.filename
+            this.$data.encodeDisabled = false
+          })
+        }
+      },
+      performEncode () {
+        const data = {
+          videoFile: this.$data.video.name,
+          subFile: this.$data.sub.name,
+          filmName: this.$data.filmData.id,
+        }
+        AppServices.encodeVideo(data).then(res => {
+          alert(res)
+        })
       },
     },
   }

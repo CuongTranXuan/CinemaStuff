@@ -4,7 +4,7 @@ import AuthServices from './services/AuthServices.js'
 
 const user = JSON.parse(localStorage.getItem('user'))
 const initialState = user // check user state from previous login
-  ? { status: { loggedIn: true, authenticated: true  }, user }
+  ? { status: { loggedIn: true, authenticated: true }, user }
   : { status: { loggedIn: false, authenticated: false }, user: null }
 
 Vue.use(Vuex)
@@ -36,14 +36,15 @@ export default new Vuex.Store({
       state.status.loggedIn = false
       state.user = null
     },
-    authenticateSuccess (state){
+    authenticateSuccess (state) {
       state.status.authenticated = true
     },
-    authenticateFailure (state){
+    authenticateFailure (state) {
       state.status.authenticated = false
     },
     logout (state) {
       state.status.loggedIn = false
+      state.status.authenticated = false
       state.user = null
     },
     registerSuccess (state) {

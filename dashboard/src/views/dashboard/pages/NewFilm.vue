@@ -67,7 +67,6 @@
               <v-text-field
                 v-model="filmData.video_link"
                 label="Video Link"
-                :disabled="disabled"
               />
             </v-col>
           </v-row>
@@ -96,13 +95,13 @@
             <v-row>
               <v-col cols="3">
                 <v-file-input
+                  v-model="video"
                   label="Add .mkv file"
                   accept=".mkv"
                   filled
                   show-size
                   dense
                   prepend-icon="mdi-movie-open"
-                  v-model="video"
                 />
                 <v-btn
                   color="info"
@@ -114,20 +113,18 @@
               </v-col>
               <v-col cols="3">
                 <v-file-input
+                  v-model="sub"
                   label="Add .vtt file"
                   accept=".vtt"
                   filled
                   show-size
                   dense
                   prepend-icon="mdi-subtitles"
-                  :disabled="uploadSubDisabled"
-                  v-model="sub"
                 />
                 <v-btn
                   color="info"
                   class="mr-0"
                   @click="uploadSubtitle"
-                  :disabled="uploadSubDisabled"
                 >
                   Upload
                 </v-btn>
@@ -136,8 +133,8 @@
                 <v-btn
                   color="info"
                   class="mr-0"
-                  @click="performEncode"
                   :disabled="encodeDisabled"
+                  @click="performEncode"
                 >
                   Encode film
                 </v-btn>
@@ -168,8 +165,7 @@
     data () {
       return {
         disabled: false, // disable text field
-        encodeDisabled: true, //only when uploaded video + sub then this button showed up
-        uploadSubDisabled: true, // show up when video uploaded
+        encodeDisabled: false, // only when uploaded video + sub then this button showed up
         filmData: {
           id: null,
           adult: false,
@@ -184,48 +180,54 @@
           vote_average: null,
         },
         sub: null,
-        video: null
+        video: null,
       }
     },
     methods: {
       handleSubmit () {
         if (confirm('Do you want to save?')) {
-          AppServices.createFilm(this.$data.filmData)
-          this.$router.push({ path: '/dashboard' })
+          AppServices.createFilm(this.$data.filmData).then(res => {
+            window.console.log(res)
+            this.$router.push({ path: '/' })
+          })
         }
       },
       uploadSubtitle () {
-        var that = this
         const formData = new FormData()
         formData.append('sub', this.$data.sub)
         if (this.$data.sub === null) {
           alert('you must choose a file')
-        } 
-        else {
+        } else {
           AppServices.uploadSubtitle(formData).then(result => {
-            alert(result.sub)
-            that.$data.encodeDisabled = false
+            alert(result.filename)
           })
         }
       },
       uploadVideo () {
-        var that = this
         const formData = new FormData()
         formData.append('video', this.$data.video)
-        if (this.$data.video === null) { 
-          alert('you must choose a file') 
-        } 
-        else {
+        if (this.$data.video === null) {
+          alert('you must choose a file')
+        } else {
           AppServices.uploadVideo(formData).then(result => {
-            alert(result.video)
-            that.$data.filmData.video_link = `http://125.212.138.107/hls/master_${result.filename}.m3u8`
-            that.$data.uploadSubDisabled = false
+            alert(result.filename)
+            const filename = result.filename.replace(/\..+$/, '')// trim the extension away
+            this.$data.filmData.video_link = `http://125.212.138.107/hls/master_${filename}.m3u8`
+            this.$data.videoFile = result.filename
+            this.$data.encodeDisabled = false
           })
         }
       },
-      performEncode(){
-        alert('yay')
-      }
+      performEncode () {
+        const data = {
+          videoFile: this.$data.video.name,
+          subFile: this.$data.sub.name,
+          filmName: this.$data.filmData.id,
+        }
+        AppServices.encodeVideo(data).then(res => {
+          alert(res)
+        })
+      },
     },
   }
 </script>

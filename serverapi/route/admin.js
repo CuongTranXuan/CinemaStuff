@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 var ffmpegPath = '/home/cloud/bin/ffmpeg'
-var videoDir = '/home/cloud/video' //change to actual directory on vps later, /home/ubuntu/video/
+var videoDir = '/home/cloud/video' //change to actual directory on vps later, /home/cloud/video/
 const authJWT = require('../helpers/jwt.js')
 
 // film stuff
@@ -108,8 +108,9 @@ function updateFilm(req,res,next){
 function encodeVideo(req,res,next){
     let command = ffmpeg()
     command.setFfmpegPath(ffmpegPath)
-    let mkvfile = req.body.videoFile + '.mkv';
-    let vttfile = req.body.subFile + '.vtt';
+    console.log(req.body)
+    let mkvfile = req.body.videoFile ;
+    let vttfile = req.body.subFile ;
     let outputfile = 'master_' + req.body.filmName + '.m3u8';
     command
         .input(`/home/cloud/video/${mkvfile}`)
@@ -145,8 +146,8 @@ function encodeVideo(req,res,next){
         .outputOption("-hls_time","20")
         .outputOption("-hls_list_size","0")
         .outputOption("-hls_playlist_type","event")
-        .outputOption("-hls_segment_filename",`/home/cloud/video/${req.params.id}_v%v/seq_%d.ts`)
-        .output(`/home/cloud/video/${req.params.id}_v%v/index.m3u8`)
+        .outputOption("-hls_segment_filename",`/home/cloud/video/${req.body.filmName}_v%v/seq_%d.ts`)
+        .output(`/home/cloud/video/${req.body.filmName}_v%v/index.m3u8`)
         .run()
 }
 

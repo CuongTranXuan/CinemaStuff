@@ -14,8 +14,8 @@ const schema = new Schema({
     title: {type: String},
     video_link: {type: String},
     vote_average: {type: Number},
-});
+})
 
-schema.set('toJSON', { virtuals: true });
+schema.set('toJSON', { virtuals: true })
 
-module.exports = mongoose.model('Film', schema);
+module.exports = mongoose.model('Film', schema)

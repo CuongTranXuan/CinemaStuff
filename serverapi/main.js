@@ -13,17 +13,17 @@ const jwt = require('./helpers/jwt.js');
 // busboy middleware for express
 const busboy = require('connect-busboy');
 
-const mongoose = require('mongoose');
-const dbConfig = require('./config/config.json');
+const mongoose = require('mongoose')
+const dbConfig = require('./config/config.json')
 //setting middlewares
-app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'))
+app.use(bodyParser.json())
+app.use(cors())
+app.use(express.urlencoded({ extended: true }))
 
 app.use(busboy({
     highWaterMark: 10 * 1024 * 1024, // Set 10MiB buffer
-})); // Insert the busboy middle-ware
+})) // Insert the busboy middle-ware
 
 //cors
 app.use((req, res, next) => {
@@ -38,25 +38,28 @@ app.use((req, res, next) => {
   }
   next()
 })
-mongoose.connect(dbConfig.connectionString, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true });
-mongoose.Promise = global.Promise;
+mongoose.connect(dbConfig.connectionString, { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.Promise = global.Promise
 //Get the default connection
-var db = mongoose.connection;
+var db = mongoose.connection
 
 //Bind connection to error event (to get notification of connection errors)
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 // global error handler
-app.use(errorHandler);
+app.use(errorHandler)
 
 //include router
 
-let films = require('./route/films.js');
-let admin = require('./route/admin.js');
-let user = require('./route/user.js');
-app.use('/api/films',films);
-app.use('/api/admin',admin);
-app.use('/api/user',user);
-
+let films = require('./route/films.js')
+let admin = require('./route/admin.js')
+let user = require('./route/user.js')
+let statistic = require('./route/statistic.js')
+let history = require('./route/history.js')
+app.use('/api/films',films)
+app.use('/api/admin',admin)
+app.use('/api/user',user)
+app.use('/api/statistic',statistic)
+app.use('/api/history',history)
 
 
 

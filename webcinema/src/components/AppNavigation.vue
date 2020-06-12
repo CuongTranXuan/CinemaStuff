@@ -36,12 +36,6 @@ export default {
           icon: 'film',
           transform: 'shrink-6'
         },
-        {
-          url: '/login',
-          text: 'Login',
-          icon: 'lock',
-          transform: 'shrink-6'
-        }
       ]
     }
   }
