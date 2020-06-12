@@ -200,13 +200,13 @@
       handleSubmit () {
         if (confirm('Do you really want to save?')) {
           AppServices.updateFilm(this.$data.filmData)
-          this.$router.push({ path: '/dashboard' })
+          this.$router.push({ path: '/' })
         }
       },
       handleDelete () {
         if (confirm('Are you sure?')) {
           AppServices.removeFilm(this.$data.filmData._id)
-          this.$router.push({ path: '/dashboard' })
+          this.$router.push({ path: '/' })
         }
       },
       uploadSubtitle () {

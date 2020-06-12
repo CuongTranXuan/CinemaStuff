@@ -62,14 +62,16 @@ async function getById(id) {
     console.log(id)
     const user = await User.findById(id)
     if (!user.secret){
-        getQRcode(user.username)
+        return await getQRcode(user.username)
+    } else{
+        const url = speakeasy.otpauthURL({
+            secret: user.secret,
+            label: 'Fcinema',
+            encoding: 'base32',
+            issuer: user.username
+        })
+        return qrcode.toDataURL(url)
     }
-    const url = speakeasy.otpauthURL({
-        secret: user.secret,
-        label: 'Fcinema',
-        encoding: 'base32',
-    })
-    return qrcode.toDataURL(url)
 }
 
 async function create(userParam) {
@@ -122,6 +124,7 @@ async function getQRcode(username){ //call when user want to renew qr code to ad
         secret: secret.base32,
         label: 'Fcinema',
         encoding: 'base32',
+        issuer: user.username
     })
     return qrcode.toDataURL(url)
 }

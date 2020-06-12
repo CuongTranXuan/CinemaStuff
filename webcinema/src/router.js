@@ -4,9 +4,7 @@ import TopsView from "@/views/TopsView";
 import SearchView from "@/views/SearchView";
 import MoviesView from "@/views/MoviesView";
 import PlayerView from "@/views/PlayerView";
-import LoginForm from "@/views/LoginForm";
 import Player from "@/views/Player";
-import Upload from "@/views/Upload";
 Vue.use(Router);
 
 export default new Router({
@@ -23,11 +21,6 @@ export default new Router({
       component: TopsView
     },
     {
-      path: "/login",
-      name: "Login",
-      component: LoginForm
-    },
-    {
       path: "/search",
       name: "search",
       component: SearchView
@@ -36,11 +29,6 @@ export default new Router({
       path: "/movies",
       name: "movies",
       component: MoviesView
-    },
-    {
-      path: "/upload",
-      name: "upload",
-      component: Upload
     },
     {
       path: "/movies/:id",

@@ -5,12 +5,16 @@
                   class="vjs-custom-skin vjs-quality-selector"
                   :options="playerOptions"
                   @play="onPlayerPlay($event)"
-                  @ready="onPlayerReady($event)">
+                  @ready="onPlayerReady($event)"
+                  @pause="onPlayerEnded($event)"
+                  @ended="onPlayerEnded($event)"
+                  @statechanged="playerStateChanged($event)">
     </video-player>
   </div>
 </template>
 <script>
 import VideoPlayer from '@/components/VideoPlayer.vue'
+import AppServices from '@/services/AppServices.js'
 import { mapState } from 'vuex';
 export default {
   name: 'Player',
@@ -37,11 +41,20 @@ export default {
   },
   methods: {
     onPlayerPlay () {
-      //console.log('player play!', player)
+      window.console.log('player play!')
+      AppServices.startPlay(this.itemInfo.id)
     },
     onPlayerReady () {
-      //console.log('player ready!', player)
+      window.console.log('player ready!')
       this.player.play()
+    },
+    onPlayerEnded () {
+      window.console.log('player ended!')
+      AppServices.endPlay(this.itemInfo.id)
+    },
+    //listen state event
+    playerStateChanged(playerCurrentState) {
+      window.console.log('player current update state', playerCurrentState)
     },
     playVideo: function (source) {
       const video = {
@@ -63,7 +76,7 @@ export default {
 
 </script>
 <style>
-     .player {
+    .player {
         position: absolute !important;
         width: 70%;
         height: 70%;

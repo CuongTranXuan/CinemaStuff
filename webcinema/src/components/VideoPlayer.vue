@@ -173,7 +173,7 @@ export default {
   watch: {
     options: {
       deep: true,
-      handler (options, oldOptions) {
+      handler (options) {
         this.dispose(() => {
           if (options && options.sources && options.sources.length) {
             this.initialize()
@@ -197,5 +197,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
