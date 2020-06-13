@@ -2,23 +2,21 @@
 import { authHeader } from '@/services/AuthHeader.js'
 import router from '../router.js'
 import store from '../store.js'
-const API_URL = 'http://125.212.138.107/api'
+const API_URL = 'http://125.212.203.148/api'
 
 export default {
     getConcurrent,
 }
 
-function getConcurrent() {
+function getConcurrent () {
     const header = authHeader()
     const requestOptions = {
-        method:'GET',
-        headers: header
+        method: 'GET',
+        headers: header,
     }
-    return fetch(`${API_URL}/statistic/concurrents`,requestOptions)
+    return fetch(`${API_URL}/statistic/concurrents`, requestOptions)
         .then(handleResponse)
 }
-
-
 
 function handleResponse (response) {
     return response.text().then(text => {

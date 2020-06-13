@@ -4,10 +4,10 @@
     fluid
     tag="section"
   >
-  <v-row>
-    <v-col
+    <v-row>
+      <v-col
         cols="12"
-    >
+      >
         <base-material-chart-card
           :data="dummy.data"
           :options="dummy.options"
@@ -29,24 +29,24 @@
             <span class="caption grey--text font-weight-light">updated 10 minutes ago</span>
           </template>
         </base-material-chart-card>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col
-      cols="12"
-    >
-      <base-material-card
-        color="success"
-        class="px-5 py-3"
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col
+        cols="12"
       >
-        <template v-slot:heading>
-          <div class="display-2 font-weight-light">
-            Film List
-          </div>
+        <base-material-card
+          color="success"
+          class="px-5 py-3"
+        >
+          <template v-slot:heading>
+            <div class="display-2 font-weight-light">
+              Film List
+            </div>
 
-          <div class="subtitle-1 font-weight-light">
-            Control current list film
-          </div>
+            <div class="subtitle-1 font-weight-light">
+              Control current list film
+            </div>
           <!-- <v-spacer/>
           <v-text-field
             v-model="search"
@@ -55,22 +55,22 @@
             single-line
             hide-details
           /> -->
-        </template>
-        <v-card-text>
-          <v-data-table
-            :headers="headers"
-            :items="items"
-            item-key="id"
-            single-select
-            :loading="isLoading"
-            loading-text="Loading... Please wait"
-            no-data-text="No data to display"
-            @click:row="rowClick"
-          />
-        </v-card-text>
-      </base-material-card>
-    </v-col>
-  </v-row>
+          </template>
+          <v-card-text>
+            <v-data-table
+              :headers="headers"
+              :items="items"
+              item-key="id"
+              single-select
+              :loading="isLoading"
+              loading-text="Loading... Please wait"
+              no-data-text="No data to display"
+              @click:row="rowClick"
+            />
+          </v-card-text>
+        </base-material-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

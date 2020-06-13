@@ -1,5 +1,6 @@
 const db = require('../../helpers/db.js')
 const Film = db.Film
+const historyService = require('../history/historyService.js')
 
 
 module.exports = {
@@ -30,6 +31,11 @@ async function createFilm(filmParams){
         throw 'Film "' + filmParams.name + ' " has already added';
     }
     let film = new Film(filmParams)
+    historyService.createHistory({
+        filmId: filmParams.id,
+        log: [],
+        totalWatch: 0
+    })
     //save film to database
     await film.save()
 }
@@ -38,6 +44,11 @@ async function updateFilm(id, filmParams){
     
     //validate
     if (!film) throw 'Film not found'
+    historyService.createHistory({ //make sure u have a history document for the film
+        filmId: filmParams.id,
+        log: [],
+        totalWatch: 0
+    })
     //override filmParams to film and update to database
     Object.assign(film, filmParams)
     await film.save()

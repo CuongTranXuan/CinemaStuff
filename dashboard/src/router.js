@@ -1,21 +1,30 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import Index from '@/views/dashboard/Index'
+import Dashboard from '@/views/dashboard/Dashboard'
+import UserProfile from '@/views/dashboard/pages/UserProfile'
+import LoginForm from '@/views/dashboard/pages/LoginForm'
+import NewFilm from '@/views/dashboard/pages/NewFilm'
+import EditFilm from '@/views/dashboard/pages/EditFilm'
 Vue.use(Router)
+
+// function loadView(view) {
+//   return () => import(/* webpackChunkName: "view-[request]" */ `@/views/${view}.vue`)
+// }
 
 export default new Router({
   mode: 'hash',
-  base: process.env.BASE_URL,
+  base: '/dashboard/',
   routes: [
     {
       path: '/',
-      component: () => import('@/views/dashboard/Index'),
+      component: Index,
       children: [
         // Dashboard
         {
           name: 'Dashboard',
           path: '',
-          component: () => import('@/views/dashboard/Dashboard'),
+          component: Dashboard,
           meta: {
             requiresAuth: true,
           },
@@ -24,7 +33,7 @@ export default new Router({
         {
           name: 'User Profile',
           path: 'pages/user',
-          component: () => import('@/views/dashboard/pages/UserProfile'),
+          component: UserProfile,
           meta: {
             requiresAuth: true,
           },
@@ -32,13 +41,13 @@ export default new Router({
         {
           name: 'Login',
           path: 'login',
-          component: () => import('@/views/dashboard/pages/LoginForm'),
+          component: LoginForm,
         },
         // Films
         {
           name: 'Add new film',
           path: 'pages/newfilm',
-          component: () => import('@/views/dashboard/pages/NewFilm'),
+          component: NewFilm,
           meta: {
             requiresAuth: true,
           },
@@ -46,7 +55,7 @@ export default new Router({
         {
           name: 'Edit film',
           path: 'film/:id',
-          component: () => import('@/views/dashboard/pages/EditFilm'),
+          component: EditFilm,
           meta: {
             requiresAuth: true,
           },

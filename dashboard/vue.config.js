@@ -10,7 +10,6 @@ module.exports = {
     https: false,
     hot: true,
   },
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/dashboard/',
   transpileDependencies: ['vuetify'],
 
   pluginOptions: {
@@ -21,4 +20,9 @@ module.exports = {
       enableInSFC: false,
     },
   },
+  publicPath: './',
+  productionSourceMap: false,  
+  outputDir: './dist',
+  // assetsDir: './static',
+  indexPath: 'index.html',
 }

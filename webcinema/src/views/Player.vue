@@ -23,6 +23,7 @@ export default {
   },
    data () {
     return {
+      playerState: null,
       playerOptions: {
         autoplay: false,
         controls: true,
@@ -32,6 +33,19 @@ export default {
         }
       }
     }
+  },
+  created(){
+    window.addEventListener('beforeunload',(event) => {
+          // Cancel the event as stated by the standard.
+        event.preventDefault();
+        // Chrome requires returnValue to be set.
+        event.returnValue = '';
+        let state = this.playerState
+        window.console.log(state)
+      // if (state.playing === true) {
+      //   AppServices.endPlay(this.itemInfo.id)
+      // }
+    })
   },
   computed: {
     player () {
@@ -54,7 +68,8 @@ export default {
     },
     //listen state event
     playerStateChanged(playerCurrentState) {
-      window.console.log('player current update state', playerCurrentState)
+      this.$data.playerState = playerCurrentState
+      window.console.log('player current update state', this.$data.playerState)
     },
     playVideo: function (source) {
       const video = {

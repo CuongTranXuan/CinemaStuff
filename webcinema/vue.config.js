@@ -10,23 +10,7 @@ module.exports = {
     disableHostCheck: true, 
     https: false,
     hot: true
-    // proxy: {
-    //   '/': {
-    //       target: 'http://localhost:3000',
-    //       changeOrigin: true,
-    //       pathRewrite: {
-    //           '^/sockjs-node': ''
-    //       },
-    //   }
-    // }
   },
-  // configureWebpack: {
-  //   plugins: [
-  //     new BundleAnalyzerPlugin({
-  //       analyzerPort: 8000
-  //     })
-  //   ]
-  // },
   css: {
     loaderOptions: {
       sass: {
@@ -34,5 +18,9 @@ module.exports = {
       }
     }
   },
-  publicPath: process.env.NODE_ENV === "production" ? "./" : "/film/"
+  publicPath: './',
+  productionSourceMap: false,  
+  outputDir: './dist',
+  assetsDir: './static',
+  indexPath: 'index.html'
 };

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { authHeader } from '@/services/AuthHeader.js'
-import store from '../store.js'
+// import store from '../store.js'
 const API_URL = 'http://125.212.203.148/api/user'
 
 class AuthService {
