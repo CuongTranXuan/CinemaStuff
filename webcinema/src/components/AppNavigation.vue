@@ -22,7 +22,6 @@ export default {
   components: { AppSearch },
   data() {
     return {
-      showModal: false,
       links: [
         {
           url: '/tops',

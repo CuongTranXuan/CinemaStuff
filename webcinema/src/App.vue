@@ -3,12 +3,10 @@
     <header>
       <AppNavigation />
     </header>
-{{ }}
     <section>
       <keep-alive>
         <router-view :key="$route.fullPath"/>
       </keep-alive>
-      <!-- <AppModal v-if="showModal" @close-modal="toggleModal"></AppModal> -->
     </section>
 
     <footer>
@@ -26,11 +24,6 @@ export default {
     AppNavigation,
     AppFooter
   },
-  data() {
-    return {
-      showModal: false
-    };
-  }
 };
 </script>
 

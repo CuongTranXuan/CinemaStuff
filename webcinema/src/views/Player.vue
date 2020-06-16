@@ -37,11 +37,11 @@ export default {
   created(){
     window.addEventListener('beforeunload',(event) => {
           // Cancel the event as stated by the standard.
+           let state = this.playerState
+        window.console.log(state)
         event.preventDefault();
         // Chrome requires returnValue to be set.
         event.returnValue = '';
-        let state = this.playerState
-        window.console.log(state)
       // if (state.playing === true) {
       //   AppServices.endPlay(this.itemInfo.id)
       // }
@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     onPlayerPlay () {
-      window.console.log('player play!')
+      window.console.log('start play!')
       AppServices.startPlay(this.itemInfo.id)
     },
     onPlayerReady () {

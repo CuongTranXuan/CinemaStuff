@@ -1,16 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/views/dashboard/Index'
-import Dashboard from '@/views/dashboard/Dashboard'
-import UserProfile from '@/views/dashboard/pages/UserProfile'
-import LoginForm from '@/views/dashboard/pages/LoginForm'
-import NewFilm from '@/views/dashboard/pages/NewFilm'
-import EditFilm from '@/views/dashboard/pages/EditFilm'
 Vue.use(Router)
-
-// function loadView(view) {
-//   return () => import(/* webpackChunkName: "view-[request]" */ `@/views/${view}.vue`)
-// }
 
 export default new Router({
   mode: 'hash',
@@ -24,7 +15,7 @@ export default new Router({
         {
           name: 'Dashboard',
           path: '',
-          component: Dashboard,
+          component: () => import('@/views/dashboard/Dashboard'),
           meta: {
             requiresAuth: true,
           },
@@ -33,7 +24,7 @@ export default new Router({
         {
           name: 'User Profile',
           path: 'pages/user',
-          component: UserProfile,
+          component: () => import('@/views/dashboard/pages/UserProfile'),
           meta: {
             requiresAuth: true,
           },
@@ -41,13 +32,13 @@ export default new Router({
         {
           name: 'Login',
           path: 'login',
-          component: LoginForm,
+          component: () => import('@/views/dashboard/pages/LoginForm'),
         },
         // Films
         {
           name: 'Add new film',
           path: 'pages/newfilm',
-          component: NewFilm,
+          component: () => import('@/views/dashboard/pages/NewFilm'),
           meta: {
             requiresAuth: true,
           },
@@ -55,7 +46,7 @@ export default new Router({
         {
           name: 'Edit film',
           path: 'film/:id',
-          component: EditFilm,
+          component: () => import('@/views/dashboard/pages/EditFilm'),
           meta: {
             requiresAuth: true,
           },
