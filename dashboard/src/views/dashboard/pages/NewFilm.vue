@@ -187,7 +187,6 @@
       handleSubmit () {
         if (confirm('Do you want to save?')) {
           AppServices.createFilm(this.$data.filmData).then(res => {
-            window.console.log(res)
             this.$router.push({ path: '/' })
           })
         }

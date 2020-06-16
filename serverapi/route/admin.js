@@ -12,7 +12,7 @@ const authJWT = require('../helpers/jwt.js')
 const filmService = require('../controllers/film/filmService.js')
 
 //routes
-adminRoute.get('/',authJWT.verifyToken,getVideoList);
+adminRoute.get('/',authJWT.verifyToken,adminGetFilmList);
 adminRoute.post('/films/create',[authJWT.verifyToken,authJWT.isAdmin],addFilm);
 adminRoute.delete('/films/:id',[authJWT.verifyToken,authJWT.isAdmin],deleteFilm);
 adminRoute.put('/films/:id',[authJWT.verifyToken,authJWT.isAdmin],updateFilm);
@@ -23,15 +23,10 @@ adminRoute.post('/upload_sub',[authJWT.verifyToken],uploadSubtitle);
 
 
 //function
-function getVideoList(req,res,next){
-    var filesList;
-    fs.readdir(videoDir, function(err, files){
-        if (err) console.log(err)
-        filesList = files.filter(function(e){
-            return path.extname(e).toLowerCase() === '.mkv'
-        });
-        res.json({filesList});
-    });
+function adminGetFilmList(req,res,next){
+    filmService.getAllFilm()
+        .then(listFilm => {res.status(200).json(listFilm)})
+        .catch(err => next(err))
 }
 function uploadVideo(req,res,next){
     req.pipe(req.busboy); // Pipe it through busboy
@@ -113,8 +108,8 @@ function encodeVideo(req,res,next){
     let vttfile = req.body.subFile ;
     let outputfile = 'master_' + req.body.filmName + '.m3u8';
     command
-        .input(`/home/ubuntu/video/${mkvfile}`)
-        .input(`/home/ubuntu/video/${vttfile}`)
+        .input(`${videoDir}/${mkvfile}`)
+        .input(`${videoDir}/${vttfile}`)
         .on('start', function(commandLine) {
             console.log('Spawned Ffmpeg with command: ' + commandLine);
         })
@@ -146,8 +141,8 @@ function encodeVideo(req,res,next){
         .outputOption("-hls_time","20")
         .outputOption("-hls_list_size","0")
         .outputOption("-hls_playlist_type","event")
-        .outputOption("-hls_segment_filename",`/home/ubuntu/video/${req.body.filmName}_v%v/seq_%d.ts`)
-        .output(`/home/ubuntu/video/${req.body.filmName}_v%v/index.m3u8`)
+        .outputOption("-hls_segment_filename",`${videoDir}/${req.body.filmName}_v%v/seq_%d.ts`)
+        .output(`${videoDir}/${req.body.filmName}_v%v/index.m3u8`)
         .run()
 }
 

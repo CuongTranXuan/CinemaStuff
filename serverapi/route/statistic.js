@@ -48,7 +48,9 @@ function startPlay(req,res,next){
 function stopPlay(req,res,next) {
     let filmId = req.params.id
     let tmp = filmCache.get(filmId)
-    tmp.concurrent-- 
+    if (tmp.concurrent > 0){
+        tmp.concurrent-- 
+    }
     console.log(tmp)
     if (tmp.concurrent === 0) {
         historyService.updateHistory(filmId,tmp)
@@ -56,6 +58,8 @@ function stopPlay(req,res,next) {
             console.log("deleted cache and updated to database!!!")
             filmCache.del(filmId)
         })
+    } else {
+        filmCache.set(filmId, tmp)
     }
     res.json(tmp)
 }

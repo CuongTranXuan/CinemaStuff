@@ -21,7 +21,7 @@ function getFilmList () {
         method: 'GET',
         headers: header,
     }
-    return fetch(`${API_URL}/films`, requestOptions)
+    return fetch(`${API_URL}/admin`, requestOptions)
             .then(handleResponse)
 }
 
@@ -98,7 +98,6 @@ function encodeVideo (data) {
 
 function handleResponse (response) {
     return response.text().then(text => {
-        console.log(response)
         const data = text && JSON.parse(text)
         if (!response.ok) {
             if (response.status === 401) {

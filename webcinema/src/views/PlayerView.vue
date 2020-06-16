@@ -1,6 +1,6 @@
 <template>
-  <div class="modal">
-    <div class="modal_content">
+  <div class="film">
+    <div class="film_content">
       <div class="item_content clearfix">
         <template v-if="showItemInfo">
           <aside class="poster">
@@ -15,11 +15,14 @@
             />
             <i>Vote Average</i>
           </aside>
-
-          <section class="info">
             <h1>{{ itemInfo.title }}</h1>
 
-            <p>{{ itemInfo.overview}}</p>
+            <p>
+              <span v-if="!readMore">{{ this.overviewShort}}</span>
+              <span v-if="readMore">{{itemInfo.overview}}</span>
+              <span v-if="!readMore">... </span>
+              <a class="more" @click="activeReadMore">{{buttonText}}</a>
+              </p>
 
             <h2 class="label">
               <font-awesome-icon 
@@ -28,61 +31,76 @@
                 class="icon" />&nbsp;
                 {{ dateLabel }}</h2>
             <p>{{ this.date }}</p>
-            <p/>
-<!-- 
-            <h2 class="label">Genres</h2>
-            <ul>
-              <li v-for="(g, index) in genres" :key="index">{{ g }}</li>
-            </ul> -->
-<!-- 
-            <h2 class="label">CAST</h2>
-            <p>{{ itemInfo.cast }}</p> -->
-
-            <!-- <h2 class="label">Website</h2>
-            <p class="web" v-if="itemInfo.homepage != null">
-              <a :href="itemInfo.homepage">{{ itemInfo.homepage}}</a>
-            </p> -->
-          </section>
-          <section class="control">
             <button class="button" @click="switchPlayer" title="play">
                     Play
             </button> &nbsp;
             <button class="button button2" @click="openTrailer" title="play">
                     Trailer
             </button> &nbsp;
-          </section>
+            <div v-if="togglePlay" style="height: 800px;">
+              <video-player ref="videoPlayer" 
+                  class="vjs-custom-skin vjs-quality-selector"
+                  :options="playerOptions"
+                  @play="onPlayerPlay($event)"
+                  @ready="onPlayerReady($event)"
+                  @pause="onPlayerEnded($event)"
+                  @ended="onPlayerEnded($event)"
+                  @statechanged="playerStateChanged($event)">
+              </video-player>
+            </div>
         </template>
         <template v-else>Loading ...</template>
       </div>
-      <!-- <button title="Close" class="close_modal" @click="closeModal">
-        <font-awesome-icon icon="times" transform="shrink-6" size="1x" />
-      </button> -->
     </div>
   </div>
 </template>
 
 <script>
 import ScoreIndicator from '@/components/ScoreIndicator';
+import VideoPlayer from '@/components/VideoPlayer.vue'
 import { mapState, mapGetters } from 'vuex';
 import dayjs from 'dayjs'
 
 export default {
-  name: 'Modal',
-  components: { ScoreIndicator },
+  name: 'PlayerView',
+  components: { 
+    ScoreIndicator,
+    VideoPlayer 
+  },
+  data(){
+    return {
+      readMore: false,
+      buttonText: "Read More",
+      togglePlay: false,
+      playerOptions: {
+        autoplay: false,
+        controls: true,
+        controlBar: {
+          timeDivider: true,
+          durationDisplay: true
+        }
+      }
+    }
+  },
   computed: {
+    player () {
+      return this.$refs.videoPlayer.player
+    },
     ...mapState(['type', 'itemInfo']),
     ...mapGetters(['imgPath']),
     showItemInfo() {
       return !Object.keys(this.itemInfo).length ? false : true;
+    },
+    overviewShort(){
+      let str = this.itemInfo.overview
+      str = str.substring(0,250)
+      return str
     },
     urlImg() {
       return this.itemInfo.poster_link != null
         ? `${this.itemInfo.poster_link}`
         : require('@/assets/images/poster-not-available.png');
     },
-    // genres() {
-    //   return this.itemInfo.genres.map(g => g.name.toUpperCase());
-    // },
     date(){
       return (this.itemInfo.year) ? dayjs(this.itemInfo.year).format('MMM D, YYYY') : ''
     },
@@ -94,19 +112,57 @@ export default {
     },
     trailer(){
       return this.itemInfo.trailer_link
-    }
+    },
   },
   methods: {
-    // closeModal() {
-    //   this.$emit('close-modal');
-    // }
     switchPlayer: function() {
-      let id = this.$route.params.id
-      this.$router.push({path: `/movies/${id}/play`})
+      // let id = this.$route.params.id
+      // this.$router.push({path: `/movies/${id}/play`})
+      this.$data.togglePlay = true
+      const video = {
+        withCredentials: false,
+        type: 'application/x-mpegurl',
+        src: this.itemInfo.video_link
+      }
+      this.player.src(video)
+      // this.player.load()
+      this.player.play()
     },
     openTrailer: function() {
       let trailer = this.trailer
       window.open(trailer,"_blank")
+    },
+    activeReadMore: function() {
+      this.$data.readMore = !this.$data.readMore
+      this.$data.buttonText = this.$data.readMore === true? "Less" : "Read More"
+    },
+    onPlayerPlay () {
+      window.console.log('start play!')
+      // AppServices.startPlay(this.itemInfo.id)
+    },
+    onPlayerReady () {
+      window.console.log('player ready!')
+      this.player.play()
+    },
+    onPlayerEnded () {
+      window.console.log('player ended!')
+      // AppServices.endPlay(this.itemInfo.id)
+    },
+    //listen state event
+    playerStateChanged(playerCurrentState) {
+      this.$data.playerState = playerCurrentState
+      window.console.log('player current update state', this.$data.playerState)
+    },
+    playVideo: function (source) {
+      const video = {
+        withCredentials: false,
+        type: 'application/x-mpegurl',
+        src: source
+      }
+      //this.player.reset() // in IE11 (mode IE10) direct usage of src() when <src> is already set, generated errors,
+      this.player.src(video)
+      // this.player.load()
+      this.player.play()
     }
   }
 };
@@ -114,11 +170,23 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+.player {
+        position: absolute !important;
+        width: 70%;
+        height: 70%;
+    }
+.vjs-custom-skin {
+        height: 90% !important;
+    }
+.vjs-custom-skin /deep/ .video-js {
+        width: 100% !important;
+        height: 90%;
+    }
 figure {
   margin: 0 0 1em;
 }
 img {
-  width: 100%;
+  width: 50%;
   height: auto;
 }
 h1 {

@@ -55,7 +55,6 @@ async function getAll() {
 }
 async function getRole(id){
     const user = await User.findById(id)
-    console.log(user)
     return user
 }
 async function getById(id) {
