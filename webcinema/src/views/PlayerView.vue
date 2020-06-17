@@ -138,6 +138,8 @@ export default {
     onPlayerReady() {
       window.console.log("player ready!");
       //Only when ready does "player" object exist
+      var elmnt = document.getElementById("doggo");
+      elmnt.scrollIntoView();
       const video = {
         withCredentials: false,
         type: "application/x-mpegurl",
