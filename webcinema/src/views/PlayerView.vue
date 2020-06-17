@@ -32,7 +32,7 @@
           <p>{{ this.date }}</p>
           <button class="button" @click="switchPlayer" title="play">Play</button> &nbsp;
           <button class="button button2" @click="openTrailer" title="play">Trailer</button> &nbsp;
-          <div v-if="togglePlay" id="doggo">
+          <div v-show="togglePlay" id="doggo">
             <video-player
               ref="videoPlayer"
               class="vjs-custom-skin vjs-quality-selector"
@@ -118,6 +118,7 @@ export default {
       // this.$router.push({path: `/movies/${id}/play`})
       if (!this.$data.togglePlay) {
         this.$data.togglePlay = true;
+        this.player.play();
       }
       // this.player.load()
       // this.player.play();
@@ -146,7 +147,6 @@ export default {
         src: this.itemInfo.video_link
       };
       this.player.src(video);
-      this.player.play();
     },
     onPlayerEnded() {
       window.console.log("player ended!");
