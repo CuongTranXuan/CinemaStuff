@@ -21,7 +21,7 @@ module.exports = {
 async function authenticate({ username, password }) {
     const user = await User.findOne({ username: username });
     if (!user) {
-        return res.status(404).send({message : "user not found"})
+        throw "user not found"
     }
     var passwordIsValid = bcrypt.compareSync(
         password,
@@ -76,7 +76,7 @@ async function getById(id) {
 async function create(userParam) {
     // validate
     if (await User.findOne({ username: userParam.username })) {
-        return res.status(404).send({message : "username has been used, choose another one"})
+        throw "username has been used, choose another one"
     }
 
     const user = new User(userParam)

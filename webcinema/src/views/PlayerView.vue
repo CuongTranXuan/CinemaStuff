@@ -7,47 +7,44 @@
             <figure>
               <img :src="urlImg" />
             </figure>
-            <ScoreIndicator 
-              :score="itemInfo.vote_average" 
+            <ScoreIndicator
+              :score="itemInfo.vote_average"
               size="82"
               stroke-width="5"
               stroke-color="#ff6633"
             />
             <i>Vote Average</i>
           </aside>
-            <h1>{{ itemInfo.title }}</h1>
+          <aside class="content">
+          <h1>{{ itemInfo.title }}</h1>
 
-            <p>
-              <span v-if="!readMore">{{ this.overviewShort}}</span>
-              <span v-if="readMore">{{itemInfo.overview}}</span>
-              <span v-if="!readMore">... </span>
-              <a class="more" @click="activeReadMore">{{buttonText}}</a>
-              </p>
+          <p>
+            <span v-if="!readMore">{{ this.overviewShort}}</span>
+            <span v-if="readMore">{{itemInfo.overview}}</span>
+            <span v-if="!readMore">...</span>
+            <a class="more" @click="activeReadMore">{{buttonText}}</a>
+          </p>
 
-            <h2 class="label">
-              <font-awesome-icon 
-                :icon="icon" 
-                size="1x" 
-                class="icon" />&nbsp;
-                {{ dateLabel }}</h2>
-            <p>{{ this.date }}</p>
-            <button class="button" @click="switchPlayer" title="play">
-                    Play
-            </button> &nbsp;
-            <button class="button button2" @click="openTrailer" title="play">
-                    Trailer
-            </button> &nbsp;
-            <div v-if="togglePlay" style="height: 800px;">
-              <video-player ref="videoPlayer" 
-                  class="vjs-custom-skin vjs-quality-selector"
-                  :options="playerOptions"
-                  @play="onPlayerPlay($event)"
-                  @ready="onPlayerReady($event)"
-                  @pause="onPlayerEnded($event)"
-                  @ended="onPlayerEnded($event)"
-                  @statechanged="playerStateChanged($event)">
-              </video-player>
-            </div>
+          <h2 class="label">
+            <font-awesome-icon :icon="icon" size="1x" class="icon" />
+            &nbsp;
+            {{ dateLabel }}
+          </h2>
+          <p>{{ this.date }}</p>
+          <button class="button" @click="switchPlayer" title="play">Play</button>
+          <button class="button button2" @click="openTrailer" title="play">Trailer</button>
+          </aside>
+          <div v-show="togglePlay" id="doggo">
+            <video-player
+              ref="videoPlayer"
+              class="vjs-custom-skin vjs-quality-selector"
+              :options="playerOptions"
+              @play="onPlayerPlay($event)"
+              @ready="onPlayerReady($event)"
+              @pause="onPlayerPaused($event)"
+              @ended="onPlayerEnded($event)"
+            ></video-player>
+          </div>
         </template>
         <template v-else>Loading ...</template>
       </div>
@@ -56,22 +53,24 @@
 </template>
 
 <script>
-import ScoreIndicator from '@/components/ScoreIndicator';
-import VideoPlayer from '@/components/VideoPlayer.vue'
-import { mapState, mapGetters } from 'vuex';
-import dayjs from 'dayjs'
+import ScoreIndicator from "@/components/ScoreIndicator";
+import VideoPlayer from "@/components/VideoPlayer.vue";
+import AppServices from '@/services/AppServices.js'
+import { mapState, mapGetters } from "vuex";
+import dayjs from "dayjs";
 
 export default {
-  name: 'PlayerView',
-  components: { 
+  name: "PlayerView",
+  components: {
     ScoreIndicator,
-    VideoPlayer 
+    VideoPlayer
   },
-  data(){
+  data() {
     return {
       readMore: false,
       buttonText: "Read More",
       togglePlay: false,
+      videoEnded: false,
       playerOptions: {
         autoplay: false,
         controls: true,
@@ -80,89 +79,121 @@ export default {
           durationDisplay: true
         }
       }
-    }
+    };
+  },
+  created(){
+    window.addEventListener('beforeunload',(event) => {
+      //     // Cancel the event as stated by the standard.
+      //   let state = this.$data.playerState
+      //   window.console.log(state)
+      //   event.preventDefault();
+      //   // Chrome requires returnValue to be set.
+      //   event.returnValue = '';
+      // // if (state.playing === true) {
+      // //   AppServices.endPlay(this.itemInfo.id)
+      // // }
+      window.console.log(this.$data.videoEnded)
+      window.console.log(this.itemInfo.id)
+      if(this.$data.videoEnded === false && this.$data.togglePlay === true) {
+        AppServices.endPlay(this.itemInfo.id)
+      }
+      event.preventDefault();
+        // Chrome requires returnValue to be set.
+      event.returnValue = '';
+    })
   },
   computed: {
-    player () {
-      return this.$refs.videoPlayer.player
+    player() {
+      return this.$refs.videoPlayer.player;
     },
-    ...mapState(['type', 'itemInfo']),
-    ...mapGetters(['imgPath']),
+    ...mapState(["type", "itemInfo"]),
+    ...mapGetters(["imgPath"]),
     showItemInfo() {
       return !Object.keys(this.itemInfo).length ? false : true;
     },
-    overviewShort(){
-      let str = this.itemInfo.overview
-      str = str.substring(0,250)
-      return str
+    overviewShort() {
+      let str = this.itemInfo.overview;
+      str = str.substring(0, 250);
+      return str;
     },
     urlImg() {
       return this.itemInfo.poster_link != null
         ? `${this.itemInfo.poster_link}`
-        : require('@/assets/images/poster-not-available.png');
+        : require("@/assets/images/poster-not-available.png");
     },
-    date(){
-      return (this.itemInfo.year) ? dayjs(this.itemInfo.year).format('MMM D, YYYY') : ''
+    date() {
+      return this.itemInfo.year
+        ? dayjs(this.itemInfo.year).format("MMM D, YYYY")
+        : "";
     },
     dateLabel() {
-      return this.itemInfo.type == 'movie' ? 'Release date' : 'First air date';
+      return this.itemInfo.type == "movie" ? "Release date" : "First air date";
     },
-    icon(){
-      return this.itemInfo.type == 'movie' ? 'film' : 'tv';
+    icon() {
+      return this.itemInfo.type == "movie" ? "film" : "tv";
     },
-    trailer(){
-      return this.itemInfo.trailer_link
-    },
+    trailer() {
+      return this.itemInfo.trailer_link;
+    }
   },
   methods: {
     switchPlayer: function() {
       // let id = this.$route.params.id
       // this.$router.push({path: `/movies/${id}/play`})
-      this.$data.togglePlay = true
-      const video = {
-        withCredentials: false,
-        type: 'application/x-mpegurl',
-        src: this.itemInfo.video_link
+      if (!this.$data.togglePlay) {
+        this.$data.togglePlay = true;
       }
-      this.player.src(video)
       // this.player.load()
-      this.player.play()
+      // this.player.play();
     },
     openTrailer: function() {
-      let trailer = this.trailer
-      window.open(trailer,"_blank")
+      let trailer = this.trailer;
+      window.open(trailer, "_blank");
     },
     activeReadMore: function() {
-      this.$data.readMore = !this.$data.readMore
-      this.$data.buttonText = this.$data.readMore === true? "Less" : "Read More"
+      this.$data.readMore = !this.$data.readMore;
+      this.$data.buttonText =
+        this.$data.readMore === true ? "Less" : "Read More";
     },
-    onPlayerPlay () {
-      window.console.log('start play!')
-      // AppServices.startPlay(this.itemInfo.id)
+    onPlayerPlay() {
+      window.console.log("start play!");
     },
-    onPlayerReady () {
-      window.console.log('player ready!')
-      this.player.play()
-    },
-    onPlayerEnded () {
-      window.console.log('player ended!')
-      // AppServices.endPlay(this.itemInfo.id)
-    },
-    //listen state event
-    playerStateChanged(playerCurrentState) {
-      this.$data.playerState = playerCurrentState
-      window.console.log('player current update state', this.$data.playerState)
-    },
-    playVideo: function (source) {
+    onPlayerReady() {
+      window.console.log("player ready!");
+      //Only when ready does "player" object exist
+      var elmnt = document.getElementById("doggo");
+      elmnt.scrollIntoView();
       const video = {
         withCredentials: false,
-        type: 'application/x-mpegurl',
+        type: "application/x-mpegurl",
+        src: this.itemInfo.video_link
+      };
+      this.player.src(video);
+      this.player.play();
+      AppServices.startPlay(this.itemInfo.id)
+    },
+    onPlayerEnded() {
+      window.console.log("player ended!")
+      this.$data.videoEnded = true
+      AppServices.endPlay(this.itemInfo.id)
+    },
+    onPlayerPaused() {
+      window.console.log("player paused!");
+    },
+    //listen state event
+    // playerStateChanged(playerCurrentState) {
+    //   window.console.log("player current update state", this.$data.playerState);
+    // },
+    playVideo: function(source) {
+      const video = {
+        withCredentials: false,
+        type: "application/x-mpegurl",
         src: source
-      }
+      };
       //this.player.reset() // in IE11 (mode IE10) direct usage of src() when <src> is already set, generated errors,
-      this.player.src(video)
+      this.player.src(video);
       // this.player.load()
-      this.player.play()
+      this.player.play();
     }
   }
 };
@@ -170,18 +201,23 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+#doggo {
+  height: 800px;
+  float: center;
+  padding-top: 40vh;
+}
 .player {
-        position: absolute !important;
-        width: 70%;
-        height: 70%;
-    }
+  position: absolute !important;
+  width: 70%;
+  height: 70%;
+}
 .vjs-custom-skin {
-        height: 90% !important;
-    }
+  height: 90% !important;
+}
 .vjs-custom-skin /deep/ .video-js {
-        width: 100% !important;
-        height: 90%;
-    }
+  width: 100% !important;
+  height: 90%;
+}
 figure {
   margin: 0 0 1em;
 }
@@ -214,16 +250,20 @@ p {
   line-height: 1.4;
 }
 .button {
-  background-color: #4CAF50; /* Green */
+  background-color: #4caf50; /* Green */
   border: none;
   color: white;
   padding: 15px 32px;
-  text-align: center;
+  text-align: justify;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  margin: 5px;
+  width: 100px;
 }
-.button2 {background-color: #f44336;} /* Red */ 
+.button2 {
+  background-color: #f44336;
+} /* Red */
 a {
   display: inline-block;
   color: $color-text-secondary;
@@ -238,10 +278,15 @@ a {
 .item_content {
   padding: 2em;
 }
-.poster{
+.poster {
   display: block;
   margin-bottom: 2em;
   text-align: center;
+}
+.content{
+    display: block;
+    float: right;
+    width: 60%;
 }
 .info {
   display: block;
@@ -265,17 +310,17 @@ a {
     float: left;
     margin: 0;
     width: 33%;
-    text-align: center
+    text-align: center;
   }
-  .info{
+  .info {
     display: block;
     padding-left: 2em;
-    margin-left: 33%;    
+    margin-left: 33%;
   }
-  .control{
+  .control {
     display: block;
     padding-left: 2em;
-    margin-left: 33%;    
+    margin-left: 33%;
   }
 }
 </style>

@@ -3,11 +3,13 @@ const statisticRoute = express.Router()
 const NodeCache = require('node-cache')
 const filmCache = new NodeCache()
 const historyService = require('../controllers/history/historyService.js')
-
+const authJWT = require('../helpers/jwt.js')
+let clientsList = [] //control dashboard list, usually have 1 client at a same time but... :P
 // route
 statisticRoute.get('/play/:id',startPlay) //call when someone play video
 statisticRoute.get('/end/:id',stopPlay)
-statisticRoute.get('/concurrents')
+//return data to dashboard, should be authenticated to access
+statisticRoute.get('/data',[authJWT.verifyToken], dataHandler) //send data back to dashboard whenever something happen with history list  
 
 
 // function
@@ -48,7 +50,7 @@ function startPlay(req,res,next){
 function stopPlay(req,res,next) {
     let filmId = req.params.id
     let tmp = filmCache.get(filmId)
-    if (tmp.concurrent > 0){
+    if (tmp.concurrent >= 0){
         tmp.concurrent-- 
     }
     console.log(tmp)
@@ -63,5 +65,20 @@ function stopPlay(req,res,next) {
     }
     res.json(tmp)
 }
+function collectData(){//get all history from both database and cache to fetch to dataHandler below
+    historyService.getAllHistory()
+        .then(historyList => {
+            let data = historyList
+            
+        })
+}
+function dataHandler(req,res,next) {//when a client call this, it will set a connection between client-server, and we can use response object to send data to them in every route we want
+    const headers = {// special data for Server-Sent Events implementations
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-control': 'no-cache'
+    }
+    res.writeHead(200,headers)
 
+}
 module.exports = statisticRoute

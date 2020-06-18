@@ -37,7 +37,7 @@ export default {
   created(){
     window.addEventListener('beforeunload',(event) => {
           // Cancel the event as stated by the standard.
-           let state = this.playerState
+        let state = this.playerState
         window.console.log(state)
         event.preventDefault();
         // Chrome requires returnValue to be set.

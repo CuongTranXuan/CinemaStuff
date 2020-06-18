@@ -43,6 +43,7 @@
         <!--************************************************ Support OTP ******************************************** -->
         <v-dialog
           v-model="OTPcheck"
+          width="50%"
         >
           <v-card v-if="OTPenabled">
             <v-card-title>
@@ -50,7 +51,7 @@
             </v-card-title>
             <v-container>
               <v-row justify="center">
-                <v-col>
+                <v-col cols="1" align="center">
                   <img :src="`${qrCode}`">
                 </v-col>
               </v-row>
@@ -74,7 +75,6 @@
               >
                 Reset QR
               </v-btn>
-              <v-spacer />
               <v-btn
                 color="green darken-1"
                 dense
@@ -182,8 +182,10 @@
           if (res.data.authenticated) {
             this.$store.commit('authenticateSuccess')
             this.$router.push('/')
+            localStorage.setItem('authenticated',true)
           } else {
             this.$store.commit('authenticateFailure')
+            localStorage.setItem('authenticated',false)
             alert('Your OTP is not match')
           }
         })
@@ -261,6 +263,10 @@ input:focus {
   position: relative;
   padding-top: 15px;
   margin-top: 10px;
+}
+.v-btn{
+  margin: 10%;
+  width: 150px;
 }
 .h1 {
   color: #fff;

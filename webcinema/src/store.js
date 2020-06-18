@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import AppServices from '@/services/AppServices';
-import createPersistedState from "vuex-persistedstate";
+// import createPersistedState from "vuex-persistedstate";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -9,7 +9,7 @@ export default new Vuex.Store({
     baseUrl: '',
     itemInfo: {}
   },
-  plugins: [createPersistedState()],
+  // plugins: [createPersistedState()],
   getters: {
   },
 
