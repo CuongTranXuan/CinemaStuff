@@ -14,8 +14,7 @@ async function getAllHistory(){
         return history
     }
     else{
-        // return res.status(500).send({message: "can't get history or history not available yet!"})
-        return {}
+        throw "can't get history or history not available yet!"
     }
 }
 async function getHistory(id){
@@ -24,19 +23,18 @@ async function getHistory(id){
         return history
     }
     else{
-        // return res.status(404).send({message: "can't find the film's history! "})
-        return {}
+        throw "can't find the film's history! "
     }
 }
 async function updateHistory(id,filmLog){
     const history = await History.findOne({filmId: id})
-    if (!history) return {}
+    if (!history) throw "History not available"
     Object.assign(history, filmLog)
     await history.save()
 }
 async function createHistory(filmLog){
     let history = await History.findOne({filmId: filmLog.id})
-    if (history) return {}
+    if (history) throw "History is duplicated"
     history = new History(filmLog)
     await history.save()
 }

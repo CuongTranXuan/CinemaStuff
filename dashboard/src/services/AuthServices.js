@@ -14,6 +14,7 @@ class AuthService {
             if (response.status === 401) return response.data.message
             if (response.data.accessToken) {
                 localStorage.setItem('user', JSON.stringify(response.data))
+                localStorage.setItem('authenticated',false)
             }
             return response.data
         })
@@ -21,7 +22,8 @@ class AuthService {
 
     logout () {
         localStorage.removeItem('user')
-        window.console.log('logged out', JSON.parse(localStorage.getItem('user')))
+        localStorage.removeItem('authenticated')
+        window.console.log('logged out')
     }
 
     register (user) {

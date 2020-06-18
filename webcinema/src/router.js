@@ -2,9 +2,8 @@ import Vue from "vue";
 import Router from "vue-router";
 import TopsView from "@/views/TopsView";
 import SearchView from "@/views/SearchView";
-import MoviesView from "@/views/MoviesView";
+// import MoviesView from "@/views/MoviesView";
 import PlayerView from "@/views/PlayerView";
-import Player from "@/views/Player";
 Vue.use(Router);
 
 export default new Router({
@@ -28,15 +27,11 @@ export default new Router({
     {
       path: "/movies",
       name: "movies",
-      component: MoviesView
+      component: TopsView
     },
     {
       path: "/movies/:id",
       component: PlayerView
-    },
-    {
-      path: "/movies/:id/play",
-      component: Player
     }
   ]
 });

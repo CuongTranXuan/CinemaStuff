@@ -15,6 +15,7 @@
             />
             <i>Vote Average</i>
           </aside>
+          <aside class="content">
           <h1>{{ itemInfo.title }}</h1>
 
           <p>
@@ -30,8 +31,9 @@
             {{ dateLabel }}
           </h2>
           <p>{{ this.date }}</p>
-          <button class="button" @click="switchPlayer" title="play">Play</button> &nbsp;
-          <button class="button button2" @click="openTrailer" title="play">Trailer</button> &nbsp;
+          <button class="button" @click="switchPlayer" title="play">Play</button>
+          <button class="button button2" @click="openTrailer" title="play">Trailer</button>
+          </aside>
           <div v-show="togglePlay" id="doggo">
             <video-player
               ref="videoPlayer"
@@ -39,9 +41,8 @@
               :options="playerOptions"
               @play="onPlayerPlay($event)"
               @ready="onPlayerReady($event)"
-              @pause="onPlayerEnded($event)"
+              @pause="onPlayerPaused($event)"
               @ended="onPlayerEnded($event)"
-              @statechanged="playerStateChanged($event)"
             ></video-player>
           </div>
         </template>
@@ -54,6 +55,7 @@
 <script>
 import ScoreIndicator from "@/components/ScoreIndicator";
 import VideoPlayer from "@/components/VideoPlayer.vue";
+import AppServices from '@/services/AppServices.js'
 import { mapState, mapGetters } from "vuex";
 import dayjs from "dayjs";
 
@@ -68,6 +70,7 @@ export default {
       readMore: false,
       buttonText: "Read More",
       togglePlay: false,
+      videoEnded: false,
       playerOptions: {
         autoplay: false,
         controls: true,
@@ -77,6 +80,27 @@ export default {
         }
       }
     };
+  },
+  created(){
+    window.addEventListener('beforeunload',(event) => {
+      //     // Cancel the event as stated by the standard.
+      //   let state = this.$data.playerState
+      //   window.console.log(state)
+      //   event.preventDefault();
+      //   // Chrome requires returnValue to be set.
+      //   event.returnValue = '';
+      // // if (state.playing === true) {
+      // //   AppServices.endPlay(this.itemInfo.id)
+      // // }
+      window.console.log(this.$data.videoEnded)
+      window.console.log(this.itemInfo.id)
+      if(this.$data.videoEnded === false && this.$data.togglePlay === true) {
+        AppServices.endPlay(this.itemInfo.id)
+      }
+      event.preventDefault();
+        // Chrome requires returnValue to be set.
+      event.returnValue = '';
+    })
   },
   computed: {
     player() {
@@ -118,7 +142,6 @@ export default {
       // this.$router.push({path: `/movies/${id}/play`})
       if (!this.$data.togglePlay) {
         this.$data.togglePlay = true;
-        this.player.play();
       }
       // this.player.load()
       // this.player.play();
@@ -134,7 +157,6 @@ export default {
     },
     onPlayerPlay() {
       window.console.log("start play!");
-      // AppServices.startPlay(this.itemInfo.id)
     },
     onPlayerReady() {
       window.console.log("player ready!");
@@ -147,16 +169,21 @@ export default {
         src: this.itemInfo.video_link
       };
       this.player.src(video);
+      this.player.play();
+      AppServices.startPlay(this.itemInfo.id)
     },
     onPlayerEnded() {
-      window.console.log("player ended!");
-      // AppServices.endPlay(this.itemInfo.id)
+      window.console.log("player ended!")
+      this.$data.videoEnded = true
+      AppServices.endPlay(this.itemInfo.id)
+    },
+    onPlayerPaused() {
+      window.console.log("player paused!");
     },
     //listen state event
-    playerStateChanged(playerCurrentState) {
-      this.$data.playerState = playerCurrentState;
-      window.console.log("player current update state", this.$data.playerState);
-    },
+    // playerStateChanged(playerCurrentState) {
+    //   window.console.log("player current update state", this.$data.playerState);
+    // },
     playVideo: function(source) {
       const video = {
         withCredentials: false,
@@ -177,7 +204,7 @@ export default {
 #doggo {
   height: 800px;
   float: center;
-  padding-top: 20vh;
+  padding-top: 40vh;
 }
 .player {
   position: absolute !important;
@@ -227,10 +254,12 @@ p {
   border: none;
   color: white;
   padding: 15px 32px;
-  text-align: center;
+  text-align: justify;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+  margin: 5px;
+  width: 100px;
 }
 .button2 {
   background-color: #f44336;
@@ -253,6 +282,11 @@ a {
   display: block;
   margin-bottom: 2em;
   text-align: center;
+}
+.content{
+    display: block;
+    float: right;
+    width: 60%;
 }
 .info {
   display: block;
