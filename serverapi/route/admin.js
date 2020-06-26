@@ -4,8 +4,8 @@ const adminRoute = express.Router();
 const fs = require('fs');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
-var ffmpegPath = '/home/ubuntu/bin/ffmpeg'
-var videoDir = '/home/ubuntu/video' //change to actual directory on vps later, /home/ubuntu/video/
+var ffmpegPath = '/home/cloud/bin/ffmpeg'
+var videoDir = '/home/cloud/video' //change to actual directory on vps later, /home/ubuntu/video/
 const authJWT = require('../helpers/jwt.js')
 
 // film stuff
