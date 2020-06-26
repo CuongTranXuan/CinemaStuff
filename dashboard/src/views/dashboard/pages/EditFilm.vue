@@ -229,7 +229,7 @@
           AppServices.uploadVideo(formData).then(result => {
             alert(result.filename)
             const filename = result.filename.replace(/\..+$/, '')// trim the extension away
-            this.$data.filmData.video_link = `http://125.212.138.107/hls/master_${filename}.m3u8`
+            this.$data.filmData.video_link = `http://125.212.203.148/hls/master_${filename}.m3u8`
             this.$data.videoFile = result.filename
             this.$data.encodeDisabled = false
           })

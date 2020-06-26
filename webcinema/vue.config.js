@@ -3,7 +3,7 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 3000,
-    public: 'http://125.212.138.107/film/',
+    public: 'http://125.212.203.148/film/',
     watchOptions: {
       poll: true
     },

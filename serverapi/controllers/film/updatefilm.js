@@ -28,7 +28,7 @@ let count = 21;
 getAllFilm().then((listFilm) =>{
     listFilm.forEach(element => {
         delete(element.video)
-       element.video_link = `http://125.212.138.107/hls/master_fate_ep${count}.m3u8`
+       element.video_link = `http://125.212.203.148/hls/master_fate_ep${count}.m3u8`
        element.id = `fate_ep${count}`
        element.vote_average = 8.8
        element.poster_link = `https://image.tmdb.org/t/p/w370_and_h556_bestv2${element.poster_link}`
