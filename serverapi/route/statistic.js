@@ -9,8 +9,8 @@ let clientsList = [] //control dashboard list, usually have 1 client at a same t
 statisticRoute.get('/play/:id',startPlay) //call when someone play video
 statisticRoute.get('/end/:id',stopPlay)
 //return data to dashboard, should be authenticated to access
-statisticRoute.get('/data',[authJWT.verifyToken], dataHandler) //send data back to dashboard whenever something happen with history list  
-
+// statisticRoute.get('/data',[authJWT.verifyToken], notifyClient) //send data back to dashboard whenever something happen with history list  
+statisticRoute.get('/init',dataHandler)
 
 // function
 function startPlay(req,res,next){
@@ -26,9 +26,28 @@ function startPlay(req,res,next){
                     tmp['concurrent'] = 1 // generate new cache
                     tmp.totalWatch++
                     tmp.log.push(time)
-                    console.log(tmp)
                     filmCache.set(filmId, tmp)
-                    res.end('new view confirmed')
+                    historyService.getAllHistory().then(historyList => {
+                        let data = {} //history list + caching data from server
+                        for (let history of historyList) {
+                            let tmp = filmCache.get(history.filmId)
+                            if (tmp != undefined) {
+                                let filmId = tmp.filmId
+                                let concurrent = tmp.concurrent
+                                data[filmId] = concurrent
+                            } else {
+                                let filmId = history.filmId
+                                let concurrent = 0
+                                data[filmId] = concurrent
+                            }
+                        }
+                        clientsList.forEach(c => {
+                            let string = `data: ${JSON.stringify(data)}\n\n`
+                            console.log(string)
+                            c.res.write(string)
+                            c.res.flush()
+                        })
+                    })
                 }
             })
     }
@@ -36,7 +55,6 @@ function startPlay(req,res,next){
         tmp.concurrent++ 
         tmp.totalWatch++
         tmp.log.push(time)
-        console.log(tmp)
         filmCache.set(filmId, tmp)
         if (tmp.log.length % 10 === 0) {
             historyService.updateHistory(filmId,tmp)
@@ -44,7 +62,27 @@ function startPlay(req,res,next){
                     console.log("updated to database!!!")
                 })
         }
-        res.end('new view confirmed')
+        historyService.getAllHistory().then(historyList => {
+            let data = {} //history list + caching data from server
+            for (let history of historyList) {
+                let tmp = filmCache.get(history.filmId)
+                if (tmp != undefined) {
+                    let filmId = tmp.filmId
+                    let concurrent = tmp.concurrent
+                    data[filmId] = concurrent
+                } else {
+                    let filmId = history.filmId
+                    let concurrent = 0
+                    data[filmId] = concurrent
+                }
+            }
+            clientsList.forEach(c => {
+                let string = `data: ${JSON.stringify(data)}\n\n`
+                console.log(string)
+                c.res.write(string)
+                c.res.flush()
+            })
+        })
     }
 }
 function stopPlay(req,res,next) {
@@ -53,32 +91,77 @@ function stopPlay(req,res,next) {
     if (tmp.concurrent >= 0){
         tmp.concurrent-- 
     }
-    console.log(tmp)
     if (tmp.concurrent === 0) {
+        filmCache.del(filmId)
         historyService.updateHistory(filmId,tmp)
         .then(() => {
             console.log("deleted cache and updated to database!!!")
-            filmCache.del(filmId)
         })
     } else {
         filmCache.set(filmId, tmp)
     }
-    res.json(tmp)
-}
-function collectData(){//get all history from both database and cache to fetch to dataHandler below
-    historyService.getAllHistory()
-        .then(historyList => {
-            let data = historyList
-            
+    historyService.getAllHistory().then(historyList => {
+        let data = {} //history list + caching data from server
+        for (let history of historyList) {
+            let tmp = filmCache.get(history.filmId)
+            if (tmp != undefined) {
+                let filmId = tmp.filmId
+                let concurrent = tmp.concurrent
+                data[filmId] = concurrent
+            } else {
+                let filmId = history.filmId
+                let concurrent = 0
+                data[filmId] = concurrent
+            }
+        }
+        clientsList.forEach(c => {
+            let string = `data: ${JSON.stringify(data)}\n\n`
+            console.log(string)
+            c.res.write(string)
+            c.res.flush()
         })
+    })
 }
-function dataHandler(req,res,next) {//when a client call this, it will set a connection between client-server, and we can use response object to send data to them in every route we want
-    const headers = {// special data for Server-Sent Events implementations
-        'Content-Type': 'text/event-stream',
-        'Connection': 'keep-alive',
-        'Cache-control': 'no-cache'
-    }
-    res.writeHead(200,headers)
 
+function dataHandler(req,res,next) {//when a client call this, it will set a connection between client-server, and we can use response object to send data to them in every route we want
+    const headers = // special data for Server-Sent Events implementations
+        {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            Connection: 'keep-alive',
+            'Access-Control-Allow-Origin': '*'
+        }
+    // res.writeHead(200,headers)
+    historyService.getAllHistory().then(historyList => {
+        let data = {} //history list + caching data from server
+        for (let history of historyList) {
+            let tmp = filmCache.get(history.filmId)
+            if (tmp != undefined) {
+                let filmId = tmp.filmId
+                let concurrent = tmp.concurrent
+                data[filmId] = concurrent
+            } else {
+                let filmId = history.filmId
+                let concurrent = 0
+                data[filmId] = concurrent
+            }
+        }
+        res.writeHead(200,headers)
+        let string = `data: ${JSON.stringify(data)}\n\n`
+        console.log(string)
+        res.write(string)
+        res.flush()
+        const clientId = Date.now()
+        const newClient = {
+            id: clientId,
+            res
+        }
+        console.log(clientId)
+        clientsList.push(newClient)
+        req.on('close',() => {
+            console.log(`${clientId} is closed`)
+            clientsList.filter(c => c.id != clientId)
+        })
+    })
 }
 module.exports = statisticRoute

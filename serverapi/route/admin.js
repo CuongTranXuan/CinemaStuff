@@ -4,8 +4,8 @@ const adminRoute = express.Router();
 const fs = require('fs');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
-var ffmpegPath = '/home/ubuntu/bin/ffmpeg'
-var videoDir = '/home/ubuntu/video' //change to actual directory on vps later, /home/ubuntu/video/
+var ffmpegPath = '/home/cloud/bin/ffmpeg'
+var videoDir = '/home/cloud/video' //change to actual directory on vps later, /home/ubuntu/video/
 const authJWT = require('../helpers/jwt.js')
 
 // film stuff
@@ -42,13 +42,13 @@ function uploadVideo(req,res,next){
             // On finish of the upload
             fstream.on('close', () => {
                 console.log(`Upload of '${filename}' finished`);
-                res.json({video: 'uploaded',
+                res.status(200).json({video: 'uploaded',
                         filename: filename});
             });
         }
         else {
             console.log('error: not a valid mkv file')
-            res.json({error: 'not a valid mkv file'})
+            res.status(400).json({error: 'not a valid mkv file'})
         }
     })
 }
@@ -78,18 +78,18 @@ function uploadSubtitle(req,res,next){
 }
 function addFilm(req,res,next){
     filmService.createFilm(req.body)
-        .then(() => {res.json({result:'added'})})
-        .catch(err => next(err))
+        .then(() => {res.status(200).json({result:'new film has been added to database'})})
+        .catch(err => res.status(500).json({error: err}))
 }
 function deleteFilm(req,res,next){
     filmService.deleteFilm(req.params.id)
-        .then(() => res.json({result:'deleted'}))
-        .catch(err => next(err));
+        .then(() => res.status(200).json({result:'deleted'}))
+        .catch(err => res.status(500).json({error: err}));
 }
 function updateFilm(req,res,next){
     filmService.updateFilm(req.params.id,req.body)
-        .then(() => res.json({result: 'updated'}))
-        .catch(err => next(err));
+        .then(() => res.status(200).json({result: 'updated'}))
+        .catch(err => res.status(500).json({error: err}));
 }
 
 
@@ -103,7 +103,6 @@ function updateFilm(req,res,next){
 function encodeVideo(req,res,next){
     let command = ffmpeg()
     command.setFfmpegPath(ffmpegPath)
-    console.log(req.body)
     let mkvfile = req.body.videoFile ;
     let vttfile = req.body.subFile ;
     let outputfile = 'master_' + req.body.filmName + '.m3u8';
@@ -119,10 +118,11 @@ function encodeVideo(req,res,next){
         .on('error', function(err, stdout, stderr) {
             /// error handling
             console.log('Cannot process video: ' + err.message);
+            res.status(500).json({error: err})
         })
         .on('end', function(stdout, stderr) {
             console.log(stdout)
-            res.json({result: 'encoded'})
+            res.status(200).json({result: 'encoded'})
         })
         .outputOption("-preset","veryfast")
         .outputOption("-g","48")

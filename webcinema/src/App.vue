@@ -4,9 +4,7 @@
       <AppNavigation />
     </header>
     <section>
-      <keep-alive>
         <router-view :key="$route.fullPath"/>
-      </keep-alive>
     </section>
 
     <footer>

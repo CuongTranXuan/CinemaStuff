@@ -3,6 +3,7 @@ const historyRoute = express.Router()
 const historyService = require('../controllers/history/historyService.js')
 
 //route
+// this route is acctually not necessary
 historyRoute.get('/',getAllHistory)
 historyRoute.get('/:id',getHistory)
 historyRoute.post('/',createHistory)

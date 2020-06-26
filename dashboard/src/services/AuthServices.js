@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { authHeader } from '@/services/AuthHeader.js'
 // import store from '../store.js'
-const API_URL = 'http://125.212.203.148/api/user'
+const API_URL = 'http://125.212.138.107/api/user'
 
 class AuthService {
     login (user) {
@@ -36,7 +36,7 @@ class AuthService {
 
     getQRcode (id) {
         const header = authHeader()
-        return axios.get(`${API_URL}/${id}`, { headers: header })
+        return axios.get(`${API_URL}/qrcode/${id}`, { headers: header })
     }
 
     createQRcode (username) {

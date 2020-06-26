@@ -36,6 +36,7 @@
             dark
             dense
             @click.stop="handleLogin"
+            @keyup.enter="handleLogin"
           >
             login
           </v-btn>
@@ -79,6 +80,7 @@
                 color="green darken-1"
                 dense
                 @click="handleAuthenticate"
+                @keyup.enter="handleAuthenticate"
               >
                 Authenticate
               </v-btn>

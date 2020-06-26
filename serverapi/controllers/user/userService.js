@@ -9,20 +9,21 @@ const qrcode = require('qrcode')
 module.exports = {
     authenticate,
     getAll,
-    getById,
     getRole,
     create,
     update,
     delete: _delete,
-    getQRcode, //support OTP
-    checkQRcode
+    createQRcode, //support OTP
+    checkQRcode,
+    getQRcodeById,
 };
 
 async function authenticate({ username, password }) {
     const user = await User.findOne({ username: username });
-    if (!user) {
-        throw "user not found"
-    }
+    if (!user) return {
+        accessToken: null,
+        message: "Invalid Username!"
+      }
     var passwordIsValid = bcrypt.compareSync(
         password,
         user.password
@@ -56,21 +57,6 @@ async function getAll() {
 async function getRole(id){
     const user = await User.findById(id)
     return user
-}
-async function getById(id) {
-    console.log(id)
-    const user = await User.findById(id)
-    if (!user.secret){
-        return await getQRcode(user.username)
-    } else{
-        const url = speakeasy.otpauthURL({
-            secret: user.secret,
-            label: 'Fcinema',
-            encoding: 'base32',
-            issuer: 'second' + user.username
-        })
-        return qrcode.toDataURL(url)
-    }
 }
 
 async function create(userParam) {
@@ -114,7 +100,23 @@ async function _delete(id) {
     await User.findByIdAndRemove(id);
 }
 
-async function getQRcode(username){ //call when user want to renew qr code to add to another app on another phone
+
+async function getQRcodeById(id) {
+    console.log(id)
+    const user = await User.findById(id)
+    if (!user.secret){
+        return await createQRcode(user.username)
+    } else{
+        const url = speakeasy.otpauthURL({
+            secret: user.secret,
+            label: 'Fcinema',
+            encoding: 'base32',
+            issuer: 'second' + user.username
+        })
+        return qrcode.toDataURL(url)
+    }
+}
+async function createQRcode(username){ //call when user want to renew qr code to add to another app on another phone
     let user = await User.findOne({username: username})
     const secret = speakeasy.generateSecret({name: "Fcinema"})
     user['secret'] = secret.base32
