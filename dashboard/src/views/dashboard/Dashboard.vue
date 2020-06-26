@@ -159,7 +159,7 @@
       })
     },
     mounted () {
-      const source = new EventSource('http://125.212.203.148/api/statistic/init')
+      const source = new EventSource('http://125.212.138.107/api/statistic/init')
       let rawData = {}
       source.onopen = function (event) {
         // window.console.log(event)
