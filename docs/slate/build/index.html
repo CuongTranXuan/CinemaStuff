@@ -1,0 +1,993 @@
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Fcinema API Docs</title>
+
+    <style media="screen">
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s, .highlight .sa, .highlight .dl {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf, .highlight .fm {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+}
+.highlight .nn {
+  color: #ffffff;
+}
+.highlight .ni {
+  color: #ffffff;
+}
+.highlight .bp {
+  color: #ffffff;
+}
+.highlight .vg {
+  color: #ffffff;
+}
+.highlight .vi {
+  color: #ffffff;
+}
+.highlight .nv, .highlight .vm {
+  color: #ffffff;
+}
+.highlight .w {
+  color: #ffffff;
+}
+.highlight {
+  color: #ffffff;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+}
+.highlight .nl {
+  color: #f92672;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+    </style>
+    <style media="print">
+      * {
+        -webkit-transition:none!important;
+        transition:none!important;
+      }
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #586e75;
+}
+.highlight .err {
+  color: #002b36;
+  background-color: #dc322f;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs {
+  color: #657b83;
+}
+.highlight .cp {
+  color: #b58900;
+}
+.highlight .nt {
+  color: #b58900;
+}
+.highlight .o, .highlight .ow {
+  color: #93a1a1;
+}
+.highlight .p, .highlight .pi {
+  color: #93a1a1;
+}
+.highlight .gi {
+  color: #859900;
+}
+.highlight .gd {
+  color: #dc322f;
+}
+.highlight .gh {
+  color: #268bd2;
+  background-color: #002b36;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #6c71c4;
+}
+.highlight .kc {
+  color: #cb4b16;
+}
+.highlight .kt {
+  color: #cb4b16;
+}
+.highlight .kd {
+  color: #cb4b16;
+}
+.highlight .s, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #859900;
+}
+.highlight .sr {
+  color: #2aa198;
+}
+.highlight .si {
+  color: #d33682;
+}
+.highlight .se {
+  color: #d33682;
+}
+.highlight .nn {
+  color: #b58900;
+}
+.highlight .nc {
+  color: #b58900;
+}
+.highlight .no {
+  color: #b58900;
+}
+.highlight .na {
+  color: #268bd2;
+}
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mx {
+  color: #859900;
+}
+.highlight .ss {
+  color: #859900;
+}
+    </style>
+    <link href="stylesheets/screen-6bd731bc.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print-953e3353.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all-e9bde216.js"></script>
+
+  </head>
+
+  <body class="index" data-languages="[]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar-cad8cdcb.png" alt="" />
+      </span>
+    </a>
+    <div class="toc-wrapper">
+      <img src="images/logo-1e815a84.png" class="logo" alt="" />
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <ul id="toc" class="toc-list-h1">
+          <li>
+            <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#route-api-user" class="toc-h1 toc-link" data-title="Route /api/user">Route /api/user</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#authenticate" class="toc-h2 toc-link" data-title="Authenticate">Authenticate</a>
+                  </li>
+                  <li>
+                    <a href="#register" class="toc-h2 toc-link" data-title="Register">Register</a>
+                  </li>
+                  <li>
+                    <a href="#get-all-user" class="toc-h2 toc-link" data-title="Get All User">Get All User</a>
+                  </li>
+                  <li>
+                    <a href="#update-an-user" class="toc-h2 toc-link" data-title="Update an User">Update an User</a>
+                  </li>
+                  <li>
+                    <a href="#delete-an-user" class="toc-h2 toc-link" data-title="Delete an User">Delete an User</a>
+                  </li>
+                  <li>
+                    <a href="#get-qr-code-image" class="toc-h2 toc-link" data-title="Get QR code image">Get QR code image</a>
+                  </li>
+                  <li>
+                    <a href="#create-qr-code" class="toc-h2 toc-link" data-title="Create QR code">Create QR code</a>
+                  </li>
+                  <li>
+                    <a href="#validate-2-factor-authentication" class="toc-h2 toc-link" data-title="Validate 2-factor authentication">Validate 2-factor authentication</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#route-api-film" class="toc-h1 toc-link" data-title="Route /api/film">Route /api/film</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-all-film" class="toc-h2 toc-link" data-title="Get All Film">Get All Film</a>
+                  </li>
+                  <li>
+                    <a href="#get-film-info" class="toc-h2 toc-link" data-title="Get Film Info">Get Film Info</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#route-api-admin" class="toc-h1 toc-link" data-title="Route /api/admin">Route /api/admin</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-film-list" class="toc-h2 toc-link" data-title="Get Film List">Get Film List</a>
+                  </li>
+                  <li>
+                    <a href="#create-new-film" class="toc-h2 toc-link" data-title="Create New Film">Create New Film</a>
+                  </li>
+                  <li>
+                    <a href="#delete-a-film" class="toc-h2 toc-link" data-title="Delete a Film">Delete a Film</a>
+                  </li>
+                  <li>
+                    <a href="#update-a-film" class="toc-h2 toc-link" data-title="Update a Film">Update a Film</a>
+                  </li>
+                  <li>
+                    <a href="#upload-film" class="toc-h2 toc-link" data-title="Upload Film">Upload Film</a>
+                  </li>
+                  <li>
+                    <a href="#upload-subtitle" class="toc-h2 toc-link" data-title="Upload Subtitle">Upload Subtitle</a>
+                  </li>
+                  <li>
+                    <a href="#encode-film" class="toc-h2 toc-link" data-title="Encode Film">Encode Film</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
+            <a href="#route-api-statistic" class="toc-h1 toc-link" data-title="Route /api/statistic">Route /api/statistic</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#get-number-of-current-watching" class="toc-h2 toc-link" data-title="Get Number of Current Watching">Get Number of Current Watching</a>
+                  </li>
+                  <li>
+                    <a href="#start-play-a-film" class="toc-h2 toc-link" data-title="Start Play a Film">Start Play a Film</a>
+                  </li>
+                  <li>
+                    <a href="#a-film-is-ended" class="toc-h2 toc-link" data-title="A Film is Ended">A Film is Ended</a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+        <ul class="toc-footer">
+            <li><a href='#'>Created by Cuongtx3</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="content">
+        <h1 id='introduction'>Introduction</h1>
+<p>Welcome to the Fcinema API!</p>
+<h1 id='route-api-user'>Route /api/user</h1><h2 id='authenticate'>Authenticate</h2><h3 id='http-request'>HTTP Request</h3>
+<p><code>POST /api/user/authenticate</code></p>
+<h3 id='data-params'>Data Params</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>username</td>
+<td>provided admin/editor username</td>
+</tr>
+<tr>
+<td>password</td>
+<td>provided password</td>
+</tr>
+</tbody></table>
+<h3 id='success-response'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content:  <code>{ id: 1,  username: bob,  role: admin, accessToken: token, requireQR: true/false}</code></li>
+</ul>
+<h3 id='error-response'>Error Response</h3>
+<ul>
+<li>Code: 401 UNAUTHORIZED</li>
+<li>Content: <code>{accessToken: null,  message: &quot;Invalid Username / Password!&quot;}</code></li>
+</ul>
+
+<p>OR</p>
+
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='register'>Register</h2>
+<p>this endpoint is protected and only be used by admin account</p>
+<h3 id='http-request-2'>HTTP Request</h3>
+<p><code>POST /api/user/register</code></p>
+<h3 id='custom-header'>Custom Header</h3>
+<p><code>x-access-token: your usable token</code> </p>
+
+<p><code>x-user-id: admin account&#39;s id for identifing role</code></p>
+<h3 id='data-params-2'>Data Params</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>username</td>
+<td>new username</td>
+</tr>
+<tr>
+<td>password</td>
+<td>strong enough password</td>
+</tr>
+<tr>
+<td>role</td>
+<td>choose to create new admin or editor account</td>
+</tr>
+</tbody></table>
+<h3 id='success-response-2'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{message:&#39;registered&#39;}</code></li>
+</ul>
+<h3 id='error-response-2'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='get-all-user'>Get All User</h2>
+<p>this endpoint will send all current accounts information, password field is hashed</p>
+<h3 id='http-request-3'>HTTP Request</h3>
+<p><code>GET /api/user</code></p>
+<h3 id='custom-header-2'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+
+<p><code>x-user-id: admin account&#39;s id for identifing role</code></p>
+<h3 id='success-response-3'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: A JSON list with all information of every accounts </li>
+</ul>
+<h3 id='error-response-3'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='update-an-user'>Update an User</h2>
+<p>this endpoint is used to update information about an account, only used by admin</p>
+<h3 id='http-request-4'>HTTP Request</h3>
+<p><code>PUT /api/user/:id</code></p>
+<h3 id='custom-header-3'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+
+<p><code>x-user-id: admin account&#39;s id for identifing role</code></p>
+<h3 id='url-params'>URL Params</h3>
+<ul>
+<li>Required: <code>id = [String]</code>
+### Data Params</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>username</td>
+<td>username of the account wanted to update</td>
+</tr>
+<tr>
+<td>password</td>
+<td>new password</td>
+</tr>
+<tr>
+<td>role</td>
+<td>new role</td>
+</tr>
+</tbody></table>
+<h3 id='success-response-4'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{message:&quot;updated successfully&quot;}</code></li>
+</ul>
+<h3 id='error-response-4'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='delete-an-user'>Delete an User</h2>
+<p>this endpoint is used to delete an account, only used by admin</p>
+<h3 id='http-request-5'>HTTP Request</h3>
+<p><code>DELETE /api/user/:id</code></p>
+<h3 id='custom-header-4'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+
+<p><code>x-user-id: admin account&#39;s id for identifing role</code></p>
+<h3 id='url-params-2'>URL Params</h3>
+<ul>
+<li>Required: <code>id = [String]</code></li>
+</ul>
+<h3 id='success-response-5'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{message:&quot;deleted successfully&quot;}</code></li>
+</ul>
+<h3 id='error-response-5'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='get-qr-code-image'>Get QR code image</h2>
+<p>this endpoints will return a 2-factor authenticate QR image, must login before use</p>
+<h3 id='http-request-6'>HTTP Request</h3>
+<p><code>GET /api/user/qrcode/:id</code></p>
+<h3 id='custom-header-5'>Custom Header</h3>
+<p><code>x-access-token: your accessToken</code> </p>
+<h3 id='url-params-3'>URL Params</h3>
+<ul>
+<li>Required: <code>id = [String]</code></li>
+</ul>
+<h3 id='success-response-6'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: a Base64 image</li>
+</ul>
+<h3 id='error-response-6'>Error Response</h3>
+<ul>
+<li>Code: 404 NOT FOUND</li>
+</ul>
+
+<p>OR</p>
+
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='create-qr-code'>Create QR code</h2>
+<p>this endpoint will generate a 2-factor authenticate QR image for the first time using or when user want to reset QR code</p>
+<h3 id='http-request-7'>HTTP Request</h3>
+<p><code>POST /api/user/qrcode</code></p>
+<h3 id='custom-header-6'>Custom Header</h3>
+<p><code>x-access-token: your accessToken</code> </p>
+<h3 id='data-params-3'>Data Params</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>username</td>
+<td>the username wants to create QR code</td>
+</tr>
+</tbody></table>
+<h3 id='success-response-7'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{message: &quot;qr generated&quot;, qrcode: Base64 image}</code></li>
+</ul>
+<h3 id='error-response-7'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='validate-2-factor-authentication'>Validate 2-factor authentication</h2>
+<p>this endpoint will check 6-digit code user submit and account&#39;s secret to perform authentication, login with password before call this endpoint</p>
+<h3 id='http-request-8'>HTTP Request</h3>
+<p><code>POST /api/user/qrcode/validate</code></p>
+<h3 id='custom-header-7'>Custom Header</h3>
+<p><code>x-access-token: your accessToken</code> </p>
+<h3 id='data-params-4'>Data Params</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>username</td>
+<td>the username wants to authenticate</td>
+</tr>
+<tr>
+<td>code</td>
+<td>6-digit code provided on Google Authentication app</td>
+</tr>
+</tbody></table>
+<h3 id='success-response-8'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{message: &quot;code valid&quot;, authenticated: true}</code></li>
+</ul>
+<h3 id='error-response-8'>Error Response</h3>
+<ul>
+<li>Code: 403 FORBIDDEN</li>
+<li>Content: <code>{message: &quot;code invalid&quot;, authenticated: false}</code></li>
+</ul>
+
+<p>OR</p>
+
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h1 id='route-api-film'>Route /api/film</h1>
+<p>This route is used to serve public watching film web</p>
+<h2 id='get-all-film'>Get All Film</h2>
+<p>This endpoint will return information about every films available in database</p>
+<h3 id='http-request-9'>HTTP Request</h3>
+<p><code>GET /api/film</code></p>
+<h3 id='url-params-4'>URL Params</h3>
+<p>none</p>
+<h3 id='success-response-9'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: A JSON string contains informations about all the films</li>
+</ul>
+<h3 id='error-response-9'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='get-film-info'>Get Film Info</h2>
+<p>this endpoint return info by searching film&#39;s id</p>
+<h3 id='http-request-10'>HTTP Request</h3>
+<p><code>GET /api/film/:id</code></p>
+<h3 id='url-params-5'>URL Params</h3>
+<ul>
+<li>Required: <code>id=[String]</code></li>
+</ul>
+<h3 id='success-response-10'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: </li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Example</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>String</td>
+<td>fate_ep20</td>
+</tr>
+<tr>
+<td>title</td>
+<td>String</td>
+<td>Fate Grand Order: Absolute Demonic Front Babylonia Ep 20</td>
+</tr>
+<tr>
+<td>adult</td>
+<td>Boolean</td>
+<td>false</td>
+</tr>
+<tr>
+<td>trailer_link</td>
+<td>String</td>
+<td>youtube.com</td>
+</tr>
+<tr>
+<td>video_link</td>
+<td>String</td>
+<td>example.com</td>
+</tr>
+<tr>
+<td>poster_link</td>
+<td>String</td>
+<td>imgur.com</td>
+</tr>
+<tr>
+<td>release_date</td>
+<td>String</td>
+<td>20/2/2020</td>
+</tr>
+<tr>
+<td>overview</td>
+<td>String</td>
+<td>lorei ipsum....</td>
+</tr>
+<tr>
+<td>original_title</td>
+<td>String</td>
+<td>Fate grand Order: Zettai Majuu Sensen Babylonia</td>
+</tr>
+<tr>
+<td>original_language</td>
+<td>String</td>
+<td>jap</td>
+</tr>
+<tr>
+<td>vote_average</td>
+<td>Number</td>
+<td>10.0</td>
+</tr>
+<tr>
+<td>poster_link</td>
+<td>String</td>
+<td>imgur.com</td>
+</tr>
+</tbody></table>
+<h3 id='error-response-10'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h1 id='route-api-admin'>Route /api/admin</h1>
+<p>this route requires account login, some endpoint even requires admin&#39;s privilege</p>
+<h2 id='get-film-list'>Get Film List</h2>
+<p>this endpoint return a list film available in database, require authentication</p>
+<h3 id='http-request-11'>HTTP Request</h3>
+<p><code>GET api/admin</code></p>
+<h3 id='custom-header-8'>Custom Header</h3>
+<p><code>x-access-token: your accessToken</code> </p>
+<h3 id='url-params-6'>URL Params</h3>
+<p>none</p>
+<h3 id='success-response-11'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: A JSON string contains informations about all the films</li>
+</ul>
+<h3 id='error-response-11'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='create-new-film'>Create New Film</h2>
+<p>this endpoint creates a new entry for new film and saves to database, require admin&#39;s privilege</p>
+<h3 id='http-request-12'>HTTP Request</h3>
+<p><code>POST /api/admin/films/create</code></p>
+<h3 id='custom-header-9'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+
+<p><code>x-user-id: admin account&#39;s id for identifing role</code></p>
+<h3 id='url-params-7'>URL params</h3>
+<p>none</p>
+<h3 id='data-params-5'>Data Params</h3>
+<ul>
+<li>Content-type: application/json </li>
+<li>Content: film informations, like above </li>
+</ul>
+<h3 id='success-response-12'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{result:&#39;new film has been added to database&#39;}</code></li>
+</ul>
+<h3 id='error-response-12'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='delete-a-film'>Delete a Film</h2>
+<p>this endpoint will remove a film from database, admin&#39;s privilege required</p>
+<h3 id='http-request-13'>HTTP Request</h3>
+<p><code>DELETE /api/admin/films/:id</code></p>
+<h3 id='custom-header-10'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+
+<p><code>x-user-id: admin account&#39;s id for identifing role</code></p>
+<h3 id='url-params-8'>URL params</h3>
+<ul>
+<li>Required: <code>id=[String]</code></li>
+</ul>
+<h3 id='success-response-13'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{result:&#39;deleted&#39;}</code></li>
+</ul>
+<h3 id='error-response-13'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='update-a-film'>Update a Film</h2>
+<p>this endpoint is used for updating a film and save to database, admin&#39;s privilege required</p>
+<h3 id='http-request-14'>HTTP Request</h3>
+<p><code>PUT /api/admin/films/:id</code></p>
+<h3 id='custom-header-11'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+
+<p><code>x-user-id: admin account&#39;s id for identifing role</code></p>
+<h3 id='url-params-9'>URL params</h3>
+<ul>
+<li>Required: <code>id=[String]</code></li>
+</ul>
+<h3 id='data-params-6'>Data params</h3>
+<ul>
+<li>Content-type: application/json </li>
+<li>Content: film informations, like above </li>
+</ul>
+<h3 id='success-response-14'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{result: &#39;updated&#39;}</code></li>
+</ul>
+<h3 id='error-response-14'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error : error message}</code></li>
+</ul>
+<h2 id='upload-film'>Upload Film</h2>
+<p>this endpoint is used for uploading film to server, only support video/x-matroska (.mkv) file, login required</p>
+<h3 id='http-request-15'>HTTP Request</h3>
+<p><code>POST /api/admin/upload_video</code></p>
+<h3 id='custom-header-12'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+<h3 id='url-params-10'>URL params</h3>
+<p>none</p>
+<h3 id='data-params-7'>Data params</h3>
+<ul>
+<li>Content-type: multipart/form-data</li>
+<li>Limit size file : 30000MB</li>
+</ul>
+<h3 id='success-response-15'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{video: &#39;uploaded&#39;,filename: filename}</code></li>
+</ul>
+<h3 id='error-response-15'>Error Response</h3>
+<ul>
+<li>Code: 400 BAD REQUEST</li>
+<li>Content: <code>{error: &#39;not a valid mkv file&#39;}</code></li>
+</ul>
+<h2 id='upload-subtitle'>Upload Subtitle</h2>
+<p>this endpoint is used for uploading subtitle to server, only support text/vtt (.vtt) file, login required</p>
+<h3 id='http-request-16'>HTTP Request</h3>
+<p><code>POST /api/admin/upload_sub</code></p>
+<h3 id='custom-header-13'>Custom Header</h3>
+<p><code>x-access-token: your admin accessToken</code> </p>
+<h3 id='url-params-11'>URL params</h3>
+<p>none</p>
+<h3 id='data-params-8'>Data params</h3>
+<ul>
+<li>Content-type: multipart/form-data</li>
+</ul>
+<h3 id='success-response-16'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{sub: &#39;uploaded&#39;,filename: filename}</code></li>
+</ul>
+<h3 id='error-response-16'>Error Response</h3>
+<ul>
+<li>Code: 400 BAD REQUEST</li>
+<li>Content: <code>{error: &#39;not a valid vtt file&#39;}</code></li>
+</ul>
+<h2 id='encode-film'>Encode Film</h2>
+<p>this endpoint will let server encode a valid HLS stream and provide a valid link from video and subtitle uploaded before, login required</p>
+<h3 id='http-request-17'>HTTP Request</h3>
+<p><code>POST /api/admin/encode</code></p>
+<h3 id='custom-header-14'>Custom Header</h3>
+<p><code>x-access-token: your accessToken</code> </p>
+<h3 id='url-params-12'>URL params</h3>
+<p>none</p>
+<h3 id='data-params-9'>Data params</h3>
+<ul>
+<li>Content-type: Application/json </li>
+<li>Content: </li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>videoFile</td>
+<td>uploaded .mkv file</td>
+</tr>
+<tr>
+<td>subFile</td>
+<td>uploaded .vtt file</td>
+</tr>
+<tr>
+<td>fileName</td>
+<td>name of the HLS stream after encode</td>
+</tr>
+</tbody></table>
+<h3 id='success-response-17'>Success Response</h3>
+<ul>
+<li>Code: 200</li>
+<li>Content: <code>{result: &#39;encoded&#39;}</code></li>
+</ul>
+<h3 id='error-response-17'>Error Response</h3>
+<ul>
+<li>Code: 500 INTERNAL SERVER ERROR</li>
+<li>Content: <code>{error: error message}</code></li>
+</ul>
+<h1 id='route-api-statistic'>Route /api/statistic</h1>
+<p>this route is about counting the number of concurrents, total watch times of a film and other diagnostic data (plan)</p>
+<h2 id='get-number-of-current-watching'>Get Number of Current Watching</h2>
+<p>this endpoint using Server-Sent Event (SSE) for regularly update data to dashboard</p>
+<h3 id='http-request-18'>HTTP Request</h3>
+<p><code>GET /api/statistic/init</code></p>
+<h3 id='custom-header-15'>Custom Header</h3>
+<p><code>x-access-token: your accessToken</code></p>
+<h3 id='url-params-13'>URL params</h3>
+<p>none</p>
+<h3 id='response'>Response</h3>
+<ul>
+<li>Content-type: text/event-stream</li>
+<li>Connection: keepalive</li>
+<li>Cache-Control: no-cache</li>
+<li>Access-Control-Allow-Origin: <code>*</code></li>
+<li>Code: 200</li>
+<li>Content: </li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>filmId</td>
+<td>id of the film</td>
+</tr>
+<tr>
+<td>concurrent</td>
+<td>number of user watching the film</td>
+</tr>
+</tbody></table>
+<h2 id='start-play-a-film'>Start Play a Film</h2>
+<p>this endpoint is called when a new user start playing a film, Response is sent via SSE to dashboard</p>
+<h3 id='http-request-19'>HTTP Request</h3>
+<p><code>GET /api/statistic/play/:id</code></p>
+<h3 id='url-params-14'>URL params</h3>
+<ul>
+<li>Required: <code>id=[String]</code></li>
+</ul>
+<h3 id='response-2'>Response</h3>
+<ul>
+<li>SSE Response </li>
+</ul>
+<h2 id='a-film-is-ended'>A Film is Ended</h2>
+<p>this endpoint is called when a new user stop playing a film, or close the web, Response is sent via SSE to dashboard</p>
+<h3 id='http-request-20'>HTTP Request</h3>
+<p><code>GET /api/statistic/end/:id</code></p>
+<h3 id='url-params-15'>URL params</h3>
+<ul>
+<li>Required: <code>id=[String]</code></li>
+</ul>
+<h3 id='response-3'>Response</h3>
+<ul>
+<li>SSE Response </li>
+</ul>
+
+      </div>
+    </div>
+  </body>
+</html>
