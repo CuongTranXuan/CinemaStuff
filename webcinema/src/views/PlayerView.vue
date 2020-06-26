@@ -34,7 +34,7 @@
           <button class="button" @click="switchPlayer" title="play">Play</button>
           <button class="button button2" @click="openTrailer" title="play">Trailer</button>
           </aside>
-          <div v-show="togglePlay" id="doggo">
+          <div v-if="togglePlay" id="doggo">
             <video-player
               ref="videoPlayer"
               class="vjs-custom-skin vjs-quality-selector"
@@ -82,24 +82,20 @@ export default {
     };
   },
   created(){
+    this.$data.togglePlay = false
+    this.$data.videoEnded = false
     window.addEventListener('beforeunload',(event) => {
-      //     // Cancel the event as stated by the standard.
-      //   let state = this.$data.playerState
-      //   window.console.log(state)
-      //   event.preventDefault();
-      //   // Chrome requires returnValue to be set.
-      //   event.returnValue = '';
-      // // if (state.playing === true) {
-      // //   AppServices.endPlay(this.itemInfo.id)
-      // // }
       window.console.log(this.$data.videoEnded)
       window.console.log(this.itemInfo.id)
       if(this.$data.videoEnded === false && this.$data.togglePlay === true) {
         AppServices.endPlay(this.itemInfo.id)
       }
-      event.preventDefault();
+
+      setTimeout(() => {
+        event.preventDefault();
         // Chrome requires returnValue to be set.
-      event.returnValue = '';
+        event.returnValue = '';
+      },2000)
     })
   },
   computed: {
@@ -195,7 +191,7 @@ export default {
       // this.player.load()
       this.player.play();
     }
-  }
+  },
 };
 </script>
 

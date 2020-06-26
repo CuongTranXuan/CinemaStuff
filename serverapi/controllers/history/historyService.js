@@ -6,7 +6,7 @@ module.exports = {
     getHistory,
     updateHistory,
     createHistory,
-    deleteHistory
+    deleteHistory,
 }
 async function getAllHistory(){
     const history = await History.find({})

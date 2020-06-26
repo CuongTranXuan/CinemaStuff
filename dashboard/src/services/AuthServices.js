@@ -36,7 +36,7 @@ class AuthService {
 
     getQRcode (id) {
         const header = authHeader()
-        return axios.get(`${API_URL}/${id}`, { headers: header })
+        return axios.get(`${API_URL}/qrcode/${id}`, { headers: header })
     }
 
     createQRcode (username) {

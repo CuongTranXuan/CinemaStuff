@@ -9,9 +9,10 @@
         cols="12"
       >
         <base-material-chart-card
-          :data="dummy.data"
-          :options="dummy.options"
-          :responsive-options="dummy.responsiveOptions"
+          :data="viewsCounting.data"
+          :options="viewsCounting.options"
+          :responsive-options="viewsCounting.responsiveOptions"
+          :key="viewsCounting.data"
           color="#E91E63"
           hover-reveal
           type="Bar"
@@ -77,20 +78,17 @@
 <script>
   import AppServices from '@/services/AppServices.js'
   export default {
-    name: 'DashboardDashboard',
+    name: 'Dashboard',
 
     data () {
       return {
         isLoading: true,
         selectedId: -1,
         // search:'',
-        dummy: {
+        viewsCounting: {
           data: {
-            labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
-            series: [
-              [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-              [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-            ],
+            labels: [],
+            series: [],
           },
           options: {
             axisX: {
@@ -154,13 +152,52 @@
       }
     },
     created () {
-      var that = this
+      // this.setupSource()
       AppServices.getFilmList().then(filmList => {
-        that.$data.items = filmList
-        that.$data.isLoading = false
+        this.$data.items = filmList
+        this.$data.isLoading = false
       })
     },
+    mounted () {
+      const source = new EventSource('http://125.212.203.148/api/statistic/init')
+      let rawData = {}
+      source.onopen = function (event) {
+        // window.console.log(event)
+      }
+      source.onmessage = function (event) {
+        // window.console.log(event)
+        rawData = JSON.parse(event.data)
+        // extract data from raw
+        window.console.log(rawData)
+        this.$data.viewsCounting.data.labels = Object.keys(rawData)
+        this.$data.viewsCounting.data.series = Object.values(rawData)
+        window.console.log(this.$data.viewsCounting.data)
+      }
+      source.onerror = function (event) {
+        window.console.log(event)
+        source.close()
+      }
+    },
     methods: {
+      // setupSource () {
+      //   const es = new EventSource('http://125.212.138.107/api/statistic/init')
+      //   let rawData = []
+      //   es.onmessage = (event) => {
+      //     rawData = JSON.parse(event.data)
+      //     // extract data from raw
+      //     window.console.log(event.data)
+      //     this.$data.viewsCounting.data.labels = Object.keys(rawData)
+      //     this.$data.viewsCounting.data.series = Object.values(rawData)
+      //     window.console.log(this.$data.viewsCounting.data)
+      //   }
+      //   es.onerror = (event) => {
+      //     // if (event.readyState === EventSource.CLOSED) {
+      //     //   window.console.log('Event closed')
+      //     // }
+      //     window.console.log(event)
+      //     es.close()
+      //   }
+      // },
       rowClick: function (item, row) {
         row.select(true)
         this.selectedId = item.id

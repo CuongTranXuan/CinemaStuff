@@ -11,12 +11,12 @@ import i18n from './i18n'
 Vue.config.productionTip = false
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.state.status.loggedIn && store.state.status.authenticated) {
+    if (localStorage.getItem('user') && (localStorage.getItem('authenticated') === true)) {
       next()
-      return
+    } else {
+      store.dispatch('logout')
+      next('/login')
     }
-    // store.dispatch('logout')
-    next('/login')
   } else {
     next()
   }

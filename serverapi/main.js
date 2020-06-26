@@ -54,12 +54,12 @@ let films = require('./route/films.js')
 let admin = require('./route/admin.js')
 let user = require('./route/user.js')
 let statistic = require('./route/statistic.js')
-let history = require('./route/history.js')
+// let history = require('./route/history.js')
 app.use('/api/films',films)
 app.use('/api/admin',admin)
 app.use('/api/user',user)
 app.use('/api/statistic',statistic)
-app.use('/api/history',history)
+// app.use('/api/history',history)
 
 
 

@@ -6,11 +6,11 @@ const authJWT = require('../helpers/jwt.js')
 user.post('/authenticate', authenticate)
 user.post('/register', register)
 user.get('/',[authJWT.verifyToken,authJWT.isAdmin], getAll)
-user.get('/:id',[authJWT.verifyToken], getById)
 user.put('/:id',[authJWT.verifyToken,authJWT.isAdmin], update)
 user.delete('/:id',[authJWT.verifyToken,authJWT.isAdmin], _delete)
 //support OTP
-user.post('/qrcode',[authJWT.verifyToken],getQRcode)
+user.post('/qrcode',[authJWT.verifyToken],createQRcode)
+user.get('/qrcode/:id',[authJWT.verifyToken], getQRcodeById) 
 user.post('/qrcode/validate',[authJWT.verifyToken],checkQRcode)
 
 
@@ -23,41 +23,36 @@ function authenticate(req, res, next) {
                 res.status(200).send(result)
             }
         })
-        .catch(err => res.status(500).send({ message: err.message }))
+        .catch(err => res.status(500).json({error: err}))
 }
 
 function register(req, res, next) {
     userService.create(req.body)
-        .then(() => res.json({message:'registered'}))
-        .catch(err => res.status(500).send({ message: err.message }))
+        .then(() => res.status(200).json({message:'registered'}))
+        .catch(err => res.status(500).json({error: err}))
 }
 
 function getAll(req, res, next) {
     userService.getAll()
-        .then(users => res.json(users))
-        .catch(err => res.status(500).send({ message: err.message }))
+        .then(users => res.status(200).json(users))
+        .catch(err => res.status(500).json({error: err}))
 }
 
-function getById(req, res, next) {
-    userService.getById(req.params.id)
-        .then(user => user ? res.json(user) : res.sendStatus(404))
-        .catch(err => next(err))
-}
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(() => res.json({message:"updated successfully"}))
-        .catch(err => next(err))
+        .then(() => res.status(200).json({message:"updated successfully"}))
+        .catch(err => res.status(500).json({error: err}))
 }
 
 function _delete(req, res, next) {
     userService.delete(req.params.id)
-        .then(() => res.json({message: "deleted successfully"}))
-        .catch(err => next(err))
+        .then(() => res.status(200).json({message: "deleted successfully"}))
+        .catch(err => res.status(500).json({error: err}))
 }
 //support OTP
-function getQRcode(req,res,next) {
-    userService.getQRcode(req.body.username)
+function createQRcode(req,res,next) {
+    userService.createQRcode(req.body.username)
         .then(result => {
             res.status(200).json({message: "qr generated", qrcode: result})
         })
@@ -68,12 +63,21 @@ function getQRcode(req,res,next) {
 function checkQRcode(req,res,next){
     userService.checkQRcode(req.body.username, req.body.code)
         .then(result => {
-            res.status(200).json(result)
+            if (result.authenticated === true) {
+                res.status(200).json(result)
+            }
+            else{
+                res.status(403).json(result)
+            }
         })
         .catch(err => {
             console.log(err)
             res.status(500).json({error: err})
         })
 }
-
+function getQRcodeById(req, res, next) {
+    userService.getQRcodeById(req.params.id)
+        .then(user => user ? res.status(200).json(user) : res.sendStatus(404))
+        .catch(err => res.status(500).json({error: err}))
+}
 module.exports = user

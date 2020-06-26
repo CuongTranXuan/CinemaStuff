@@ -87,7 +87,7 @@ export default new Vuex.Store({
     logout ({ commit }) {
       AuthServices.logout()
       commit('logout')
-    },
+    }
   },
   getters: { // get the value of the attributes of vuex state
     authStatus: state => state.status,
