@@ -9,10 +9,10 @@
         cols="12"
       >
         <base-material-chart-card
+          :key="viewsCounting.data"
           :data="viewsCounting.data"
           :options="viewsCounting.options"
           :responsive-options="viewsCounting.responsiveOptions"
-          :key="viewsCounting.data"
           color="#E91E63"
           hover-reveal
           type="Bar"
@@ -159,23 +159,25 @@
       })
     },
     mounted () {
-      const source = new EventSource('http://125.212.203.148/api/statistic/init')
-      let rawData = {}
-      source.onopen = function (event) {
-        // window.console.log(event)
-      }
-      source.onmessage = function (event) {
-        // window.console.log(event)
-        rawData = JSON.parse(event.data)
-        // extract data from raw
-        window.console.log(rawData)
-        this.$data.viewsCounting.data.labels = Object.keys(rawData)
-        this.$data.viewsCounting.data.series = Object.values(rawData)
-        window.console.log(this.$data.viewsCounting.data)
-      }
-      source.onerror = function (event) {
-        window.console.log(event)
-        source.close()
+      if (this.$data.viewsCounting.data.labels.length === 0) {
+        const source = new EventSource('http://125.212.138.107/api/statistic/init')
+        let rawData = {}
+        source.onopen = function (event) {
+          // window.console.log(event)
+        }
+        source.onmessage = function (event) {
+          // window.console.log(event)
+          rawData = JSON.parse(event.data)
+          // extract data from raw
+          window.console.log(rawData)
+          this.$data.viewsCounting.data.labels = Object.keys(rawData)
+          this.$data.viewsCounting.data.series = Object.values(rawData)
+          window.console.log(this.$data.viewsCounting.data)
+        }
+        source.onerror = function (event) {
+          window.console.log(event)
+          source.close()
+        }
       }
     },
     methods: {

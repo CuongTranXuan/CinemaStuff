@@ -2,7 +2,7 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 7000,
-    public: 'http://125.212.203.148/dashboard/',
+    public: 'http://125.212.138.107/dashboard/',
     watchOptions: {
       poll: true,
     },
@@ -21,7 +21,7 @@ module.exports = {
     },
   },
   publicPath: '/dashboard/',
-  // productionSourceMap: false,  
+  // productionSourceMap: false,
   // outputDir: './dist',
   // // assetsDir: './static',
   // indexPath: 'index.html',

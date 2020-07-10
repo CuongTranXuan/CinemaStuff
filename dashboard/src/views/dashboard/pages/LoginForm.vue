@@ -51,11 +51,7 @@
               <span class="headline">OTP code</span>
             </v-card-title>
             <v-container>
-              <v-row justify="center">
-                <v-col cols="1" align="center">
-                  <img :src="`${qrCode}`">
-                </v-col>
-              </v-row>
+              <img :src="`${qrCode}`">
             </v-container>
             <v-card-text>
               <v-row>
@@ -183,11 +179,11 @@
         AuthServices.verifyOTP(this.$data.username, this.$data.code).then(res => {
           if (res.data.authenticated) {
             this.$store.commit('authenticateSuccess')
+            localStorage.setItem('authenticated', true)
             this.$router.push('/')
-            localStorage.setItem('authenticated',true)
           } else {
             this.$store.commit('authenticateFailure')
-            localStorage.setItem('authenticated',false)
+            localStorage.setItem('authenticated', false)
             alert('Your OTP is not match')
           }
         })

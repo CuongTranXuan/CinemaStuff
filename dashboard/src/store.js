@@ -5,8 +5,8 @@ import AuthServices from './services/AuthServices.js'
 const user = JSON.parse(localStorage.getItem('user'))
 const authed = localStorage.getItem('authenticated')
 const initialState = user // check user state from previous login
-  ? { status: { loggedIn: true}, user }
-  : { status: { loggedIn: false}, user: null }
+  ? { status: { loggedIn: true }, user }
+  : { status: { loggedIn: false }, user: null }
 if (authed === true) {
   initialState.status.authenticated = true
 } else {
@@ -87,7 +87,7 @@ export default new Vuex.Store({
     logout ({ commit }) {
       AuthServices.logout()
       commit('logout')
-    }
+    },
   },
   getters: { // get the value of the attributes of vuex state
     authStatus: state => state.status,

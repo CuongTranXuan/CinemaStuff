@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { authHeader } from '@/services/AuthHeader.js'
 // import store from '../store.js'
-const API_URL = 'http://125.212.203.148/api/user'
+const API_URL = 'http://125.212.138.107/api/user'
 
 class AuthService {
     login (user) {
@@ -14,7 +14,7 @@ class AuthService {
             if (response.status === 401) return response.data.message
             if (response.data.accessToken) {
                 localStorage.setItem('user', JSON.stringify(response.data))
-                localStorage.setItem('authenticated',false)
+                localStorage.setItem('authenticated', false)
             }
             return response.data
         })
